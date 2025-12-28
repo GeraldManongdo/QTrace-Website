@@ -1,4 +1,4 @@
-<?php $current_page = 'dashboard'; ?>
+<?php $current_page = 'addProject'; ?>
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -9,18 +9,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="QTrace is the official Quezon City Transparency Platform, enabling citizens to track government projects, monitor progress, and report issues for greater accountability.">
         <meta name="author" content="Confractus">
-        <link rel="icon" type="image/png" sizes="16x16" href="">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
         <title>QTrace - Quezon City Transparency Platform</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
         <link rel="stylesheet" href="../../assets/css/style.css">
     </head>
-    <body class="bg-color-light">
+    <body>
         
-        <div class="d-lg-none p-3 bg-color-primary text-white">
-            <button class="btn border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" style="color: var(--accent);" >
-                <i class="bi bi-list"></i> 
+        <div class="d-lg-none p-3 bg-dark text-white">
+            <button class="btn btn-dark border" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list"></i> Menu
             </button>
         </div>
 

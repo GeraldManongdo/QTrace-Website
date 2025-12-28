@@ -1,5 +1,3 @@
-<?php $current_page = 'dashboard'; ?>
-
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
     <head>
@@ -9,36 +7,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="QTrace is the official Quezon City Transparency Platform, enabling citizens to track government projects, monitor progress, and report issues for greater accountability.">
         <meta name="author" content="Confractus">
-        <link rel="icon" type="image/png" sizes="16x16" href="">
+        <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
         <title>QTrace - Quezon City Transparency Platform</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="../../assets/css/style.css">
-    </head>
-    <body class="bg-color-light">
-        
-        <div class="d-lg-none p-3 bg-color-primary text-white">
-            <button class="btn border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" style="color: var(--accent);" >
-                <i class="bi bi-list"></i> 
-            </button>
-        </div>
-
-        <div class="container-fluid">
-            <div class="row">
-                
-                <?php
-                    include('../../components/sideNavigation.php');
-                ?>
-
-                <main class="main-content col p-4">
-                    <h2>Content Area</h2>
-                    <p>On large screens, the sidebar is fixed. On mobile, click the toggle button to see the offcanvas menu.</p>
-                </main>
-
-            </div>
-        </div>
-
+        <link rel="stylesheet" href="assets/css/style.css">
+    <body>
+        <?php
+            include('../../components/topNavigation.php');
+            include('../../components/header.php');
+        ?>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     </body>
