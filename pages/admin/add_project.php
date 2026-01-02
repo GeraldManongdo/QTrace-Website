@@ -1,74 +1,100 @@
-<?php $current_page = 'addProject'; ?>
+<?php
+// 1. DATABASE CONNECTION
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "qtrace";
+
+$conn = new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// 2. PROCESSING THE FORM
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // For testing purposes, we assume a Contractor ID
+    // In your real app, this might come from a session or a previous INSERT
+    $contractor_id = 1; 
+
+    if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
+        
+        $stmtEx = $conn->prepare("INSERT INTO contractor_expertise_table (Contractor_Id, Expertise) VALUES (?, ?)");
+        
+        $count = 0;
+        foreach ($_POST['expertise'] as $skill) {
+            $cleanSkill = trim($skill);
+            if ($cleanSkill !== '') {
+                $stmtEx->bind_param("is", $contractor_id, $cleanSkill);
+                if ($stmtEx->execute()) {
+                    $count++;
+                }
+            }
+        }
+        $stmtEx->close();
+        $message = "<div class='alert alert-success'>Successfully saved $count skills!</div>";
+    }
+}
+?>
 
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!-- Tell the browser to be responsive to screen width -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="QTrace is the official Quezon City Transparency Platform, enabling citizens to track government projects, monitor progress, and report issues for greater accountability.">
-        <meta name="author" content="Confractus">
-        <link rel="icon" type="image/png" sizes="16x16" href="">
-        <title>QTrace - Quezon City Transparency Platform</title>
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="/Project/Qtrace/assets/css/styles.css">
-        <style>
-            :root {
-            --sidebar-width: 280px;
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contractor Skills</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .animate-fadeIn { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        body { padding: 50px; background-color: #f8f9fa; }
+        .container { max-width: 600px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
 
-        }
- 
-        </style>
-    </head>
-    <body>
-        <div class="app-container">
-            <?php
-                include('../../components/header.php');
-            ?>
+<div class="container">
+    <h2>Contractor Expertise</h2>
+    <hr>
     
-            <div class="content-area">
-                <?php
-                    include('../../components/sideNavigation.php');
-                ?>
+    <?php echo $message; ?>
 
-                <main class="main-view">
-                    <div class="container-fluid">
-                        <div class="row mb-4">
-                            <div class="col">
-                                <h2 class="fw-bold">Dashboard</h2>
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                        <li class="breadcrumb-item active">Dashboard Overview</li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6 col-lg-3">
-                                <div class="card border-0 shadow-sm p-3">
-                                    <span class="text-muted small fw-bold text-uppercase">Total Projects</span>
-                                    <h3 class="fw-bold m-0 mt-1">128</h3>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="card border-0 shadow-sm p-4" style="min-height: 1000px;">
-                                    <p class="text-muted">The header and sidebar are fixed. Only this area scrolls.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+    <form action="" method="POST">
+        <div id="skillWrapper">
+            <label class="form-label">Expertise / Skills</label>
+            <div class="input-group mb-2">
+                <input type="text" name="expertise[]" class="form-control" placeholder="Enter skill" required />
             </div>
         </div>
-            
 
+        <div class="mt-3">
+            <button type="button" id="addSkill" class="btn btn-secondary btn-sm">+ Add Another Skill</button>
+            <hr>
+            <button type="submit" class="btn btn-primary w-100">Save All Skills</button>
+        </div>
+    </form>
+</div>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    </body>
+<script>
+$(document).ready(function() {
+    // Add new input field
+    $("#addSkill").click(function() {
+        let field = `
+            <div class="input-group mb-2 animate-fadeIn">
+                <input type="text" name="expertise[]" class="form-control" placeholder="Enter skill">
+                <button class="btn btn-danger remove-row" type="button">Remove</button>
+            </div>`;
+        $('#skillWrapper').append(field);
+    });
+
+    // Remove input field
+    $(document).on('click', '.remove-row', function() {
+        $(this).closest('.input-group').remove();
+    });
+});
+</script>
+
+</body>
 </html>

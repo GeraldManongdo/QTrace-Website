@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!is_dir($logoDir)) mkdir($logoDir, 0777, true);
             $ext = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
             $safe_company_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
-            $filename = $safe_company_name . "_" . time() . "." . $ext;
+            $filename = $safe_company_name . "_"."." . $ext;
             $logo_path = $logoDir . $filename;
             move_uploaded_file($_FILES['company_logo']['tmp_name'], $logo_path);
         }
@@ -36,18 +36,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $contractor_id = $conn->insert_id;
 
-        //Insert Expertises
-        if (!empty($_POST['expertise'])) {
-            $stmtEx = $conn->prepare("INSERT INTO contractor_expertise_table (Contractor_Id, Expertise) VALUES (?, ?)");
-            foreach ($_POST['expertise'] as $skill) {
-                if (!empty(trim($skill))) {
-                    $cleanSkill = trim($skill);
-                    $stmtEx->bind_param("is", $contractor_id, $cleanSkill);
-                    $stmtEx->execute();
-                }
+if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
+    
+    $stmtEx = $conn->prepare("INSERT INTO contractor_expertise_table (Contractor_Id, Expertise) VALUES (?, ?)");
+    
+    foreach ($_POST['expertise'] as $skill) {
+        $cleanSkill = trim($skill);
+        
+        if ($cleanSkill !== '') { // Check if it's not empty after trimming
+            $stmtEx->bind_param("is", $contractor_id, $cleanSkill);
+            
+            if (!$stmtEx->execute()) {
+                // This will help you see if the DB is rejecting the 2nd entry
+                error_log("Insert failed: " . $stmtEx->error);
             }
         }
-
+    }
+}
         //Insert Legal Documents
         if (!empty($_FILES['document_files']['name'][0])) {
             $docDir = "../../uploads/documents/";

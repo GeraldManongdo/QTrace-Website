@@ -147,10 +147,10 @@
                       <input type="number" class="form-control" name="contact_number" placeholder="+639 9999 9999" required />
                     </div>
                     <div class="col-md-6">
-                      <label for="validationDefaultEmail" name="email" class="form-label fw-medium color-black" >Email</label >
+                      <label for="validationDefaultEmail" class="form-label fw-medium color-black" >Email</label >
                       <div class="input-group">
                         <span class="input-group-text" id="inputGroupPrepend2">@</span>
-                        <input type="email" class="form-control" id="validationDefaultEmail" aria-describedby="inputGroupPrepend2" placeholder="e.g., example@example.com" required />
+                        <input type="email" class="form-control" name="email" id="validationDefaultEmail" aria-describedby="inputGroupPrepend2" placeholder="e.g., example@example.com" required />
                       </div>
                     </div>
                   </div>
