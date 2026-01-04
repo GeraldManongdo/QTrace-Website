@@ -42,7 +42,7 @@
     <ul class="nav nav-pills flex-column mb-auto">
         
         <li class="nav-item">
-            <a href="/Project/Qtrace/dashboard" class="nav-link text-black  <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>">
+            <a href="/QTrace-Website/dashboard" class="nav-link text-black  <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>">
                 <i class="bi bi-house me-2"></i> Dashboard
             </a>
         </li>
@@ -58,17 +58,17 @@
             <div class="collapse <?php echo in_array($current_page, ['projectList', 'projectMap', 'addProject']) ? 'show' : ''; ?>" id="submenu1">
                 <ul class="nav nav-pills flex-column ms-3 mt-1">
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'projectList') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/project-list">
+                        <a class="nav-link text-black <?php echo ($current_page == 'projectList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/project-list">
                             Project List
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'projectMap') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/project-map">
+                        <a class="nav-link text-black <?php echo ($current_page == 'projectMap') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/project-map">
                             Project Map
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'addProject') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/add-project">
+                        <a class="nav-link text-black <?php echo ($current_page == 'addProject') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-project">
                             Add Project
                         </a>
                     </li>
@@ -87,22 +87,22 @@
             <div class="collapse <?php echo in_array($current_page, ['contractorList', 'addContractor', 'engineerList', 'addEngineer']) ? 'show' : ''; ?>" id="submenu2">
                 <ul class="nav nav-pills flex-column ms-3 mt-1">
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'contractorList') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/contractor-list">
+                        <a class="nav-link text-black <?php echo ($current_page == 'contractorList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/contractor-list">
                             Contractor List
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'addContractor') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/add-contractor">
+                        <a class="nav-link text-black <?php echo ($current_page == 'addContractor') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-contractor">
                             Add Contractor
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'engineerList') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/engineer-list">
+                        <a class="nav-link text-black <?php echo ($current_page == 'engineerList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/engineer-list">
                             Engineer List
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($current_page == 'addEngineer') ? 'active' : 'text-black-50'; ?>" href="/Project/Qtrace/add-engineer">
+                        <a class="nav-link text-black <?php echo ($current_page == 'addEngineer') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-engineer">
                             Add Engineer
                         </a>
                     </li>
@@ -111,12 +111,12 @@
         </li>
 
         <li class="nav-item">
-            <a href="/Project/Qtrace/history" class="nav-link text-black <?php echo ($current_page == 'history') ? 'active' : ''; ?>">
+            <a href="/QTrace-Website/history" class="nav-link text-black <?php echo ($current_page == 'history') ? 'active' : ''; ?>">
                 <i class="bi bi-archive"></i> Audit Logs
             </a>
         </li>
         <li class="nav-item">
-            <a href="/Project/Qtrace/reports" class="nav-link text-black <?php echo ($current_page == 'reports') ? 'active' : ''; ?>">
+            <a href="/QTrace-Website/reports" class="nav-link text-black <?php echo ($current_page == 'reports') ? 'active' : ''; ?>">
                 <i class="bi bi-card-text"></i> Reports
             </a>
         </li>

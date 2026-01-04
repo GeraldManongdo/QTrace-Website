@@ -64,7 +64,16 @@ if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
                 if ($_FILES['document_files']['error'][$key] == 0) {
                     $docName = $_POST['document_names'][$key];
                     $tmpPath = $_FILES['document_files']['tmp_name'][$key];
-                    $filePath = $docDir . time() . "_" . $_FILES['document_files']['name'][$key];
+                    
+                    $ext = pathinfo($_FILES['document_files']['name'][$key], PATHINFO_EXTENSION);
+                    
+                
+                    $safe_company = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
+                    $safe_doc = preg_replace('/[^A-Za-z0-9\-]/', '_', $docName);
+
+
+                    $filename = $safe_company . "._." . $safe_doc . "." . $ext;
+                    $filePath = $docDir . $filename;
                     
                     if (move_uploaded_file($tmpPath, $filePath)) {
                         $stmtDoc->bind_param("iss", $contractor_id, $docName, $filePath);

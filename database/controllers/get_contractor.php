@@ -13,7 +13,7 @@ $sql = "SELECT c.*, GROUP_CONCAT(e.Expertise SEPARATOR ', ') as skills
         WHERE 1=1";
 
 if (!empty($search_skill)) {
-    $sql .= " AND c.Contractor_Id IN (SELECT Contractor_Id FROM contractor_expertise_table WHERE expertise_name LIKE '%$search_skill%')";
+    $sql .= " AND c.Contractor_Id IN (SELECT Contractor_Id FROM contractor_expertise_table WHERE expertise LIKE '%$search_skill%')";
 }
 
 if ($min_years > 0) {

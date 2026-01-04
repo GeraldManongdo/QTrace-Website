@@ -1,6 +1,5 @@
 <?php 
   $current_page = 'addContractor'; 
-
 ?>
 
 <!DOCTYPE html>
@@ -10,17 +9,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--  -->
-    <meta name="description" content="QTrace is the official Quezon City Transparency Platform, enabling citizens to track government projects, monitor progress, and report issues for greater accountability."/>
+    <!-- SEO -->
+    <meta name="description" content="Register a new contractor in the QTRACE system."/>
     <meta name="author" content="Confractus" />
     <link rel="icon" type="image/png" sizes="16x16" href="" />
-    <title>QTrace - Quezon City Transparency Platform</title>
+    <title>QTrace - Add New Contractor</title>
     <!-- Bootstrap CSS Link-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Basta need toh-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <!-- General Css Link -->
-    <link rel="stylesheet" href="/Project/Qtrace/assets/css/styles.css" />
+    <link rel="stylesheet" href="/QTrace-Website/assets/css/styles.css" />
     <!-- Custome Css For This Page Only  -->
     <style>
       /* Image Preview Box */
@@ -77,7 +76,7 @@
               <!-- Breadcrumb -->
               <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                  <a href="/Project/Qtrace/dashboard">Home</a>
+                  <a href="/QTrace-Website/dashboard">Home</a>
                 </li>
                 <li class="breadcrumb-item active">Add New Contractor</li>
               </ol>
@@ -93,7 +92,7 @@
             <!-- Form Section -->
             <div class="row g-3">
               <div class="col-12 card border-0 shadow-sm p-3">
-                <form method="POST" action="/Project/Qtrace/database/controllers/add_contractor.php" enctype="multipart/form-data" >
+                <form method="POST" action="/QTrace-Website/database/controllers/add_contractor.php" enctype="multipart/form-data" >
                   <div class="row g-3 mb-4">
                     <legend>Company Information</legend>
                     <hr class="m-1" />
@@ -203,13 +202,17 @@
                     </div>
                   </div>
 
-                  <div class="col-12 row mt-3 gap-3">
-                    <button class="btn btn-danger col-5" type="reset">
-                      Cancel
-                    </button>
-                    <button class="btn btn-primary col-5" type="submit">
-                      Add
-                    </button>
+                  <div class="row mt-4 g-3">
+                    <div class="col-6">
+                      <button class="btn btn-outline-secondary w-100 fw-medium" type="reset">
+                        Cancel
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button class="btn bg-color-primary text-light w-100 fw-medium" type="submit">
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -225,9 +228,9 @@
     </script>
          
     <!-- Reusable Script -->
-    <script src="/Project/Qtrace/assets/js/imageholder.js"></script>
-    <script src="/Project/Qtrace/assets/js/dynamicFieldText.js"></script>
-    <script src="/Project/Qtrace/assets/js/dynamicFieldFile.js"></script>
+    <script src="/QTrace-Website/assets/js/imageholder.js"></script>
+    <script src="/QTrace-Website/assets/js/dynamicFieldText.js"></script>
+    <script src="/QTrace-Website/assets/js/dynamicFieldFile.js"></script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

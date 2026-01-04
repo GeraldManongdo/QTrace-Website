@@ -10,17 +10,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--  -->
-    <meta name="description" content="QTrace is the official Quezon City Transparency Platform, enabling citizens to track government projects, monitor progress, and report issues for greater accountability."/>
+    <!-- SEO -->
+    <meta name="description" content="List of verified contractors working on Quezon City government projects."/>
     <meta name="author" content="Confractus" />
     <link rel="icon" type="image/png" sizes="16x16" href="" />
-    <title>QTrace - Quezon City Transparency Platform</title>
+    <title>QTrace - Contractor List</title>
     <!-- Bootstrap CSS Link-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Basta need toh-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <!-- General Css Link -->
-    <link rel="stylesheet" href="/Project/Qtrace/assets/css/styles.css" />
+    <link rel="stylesheet" href="/QTrace-Website/assets/css/styles.css" />
     <!-- Custome Css For This Page Only  -->
     <style>
 
@@ -72,11 +72,16 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label fw-bold">Min. Experience (Years)</label>
-                                        <input type="number" name="min_years" class="form-control" placeholder="0" value="<?= $min_years > 0 ? $min_years : '' ?>">
+                                        <input type="number" name="min_years" class="form-control" placeholder="0" min="0" value="<?= $min_years > 0 ? $min_years : '' ?>">
                                     </div>
-                                    <div class="col-md-3 d-flex align-items-end">
-                                        <button type="submit" class="btn btn-dark w-100">Apply Filters</button>
-                                        <a href="list_contractors.php" class="btn btn-link">Reset</a>
+                                    <div class="col-md-3 d-flex align-items-end row g-2">
+                                        <div class="col-6">
+                                            <button class="btn bg-color-primary text-light fw-medium w-100" type="submit">Apply Filters</button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="reset" class="btn btn-outline-secondary w-100 fw-medium">Reset</button>
+                                        </div>
+                                            
                                     </div>
                                 </form>
                             </div>
@@ -103,7 +108,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <?php if($row['Contractor_Logo_Path']): ?>
-                                                            <img src="/Project/Qtrace/uploads/logos/<?= $row['Contractor_Logo_Path'] ?>" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                                            <img src="/QTrace-Website/uploads/logos/<?= $row['Contractor_Logo_Path'] ?>" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
                                                         <?php else: ?>
                                                             <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width:40px; height:40px;">
                                                                 <?= substr($row['Contractor_Name'], 0, 1) ?>
@@ -128,7 +133,7 @@
                                                 <td><span class="badge bg-secondary"><?= $row['Years_Of_Experience'] ?> yrs</span></td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="/Project/Qtrace/pages/admin/view_contractor.php?id=<?= $row['Contractor_Id'] ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+                                                        <a href="/QTrace-Website/pages/admin/view_contractor.php?id=<?= $row['Contractor_Id'] ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
                                                         <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete(<?= $row['Contractor_Id'] ?>)"><i class="bi bi-trash"></i></button>
                                                     </div>
                                                 </td>
