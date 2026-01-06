@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 2. Handle Logo Upload (If a new one is selected)
     if (!empty($_FILES['company_logo']['name'])) {
-        $target_dir = "../../assets/uploads/logos/";
+        $target_dir = "../../assets/upload/logos/";
         $ext = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
         $safe_company_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
         $filename = $safe_company_name . "_"."." . $ext;
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($_FILES["company_logo"]["tmp_name"], $logo_path)) {
             $update_logo = "UPDATE contractors SET Contractor_Logo_Path = ? WHERE Contractor_Id = ?";
             $logo_stmt = $conn->prepare($update_logo);
-            $db_path = "/QTrace-Website/assets/uploads/logos/" . $file_name;
+            $db_path = "/QTrace-Website/assets/upload/logos/" . $file_name;
             $logo_stmt->bind_param("si", $db_path, $id);
             $logo_stmt->execute();
         }
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         for ($i = 0; $i < count($doc_files['name']); $i++) {
             if ($doc_files['error'][$i] === 0) {
-                $doc_dir = "../../assets/uploads/documents/";
+                $doc_dir = "../../assets/upload/documents/";
                    $ext = pathinfo($_FILES['document_files']['name'][$key], PATHINFO_EXTENSION);
                     $safe_company = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
                     $safe_doc = preg_replace('/[^A-Za-z0-9\-]/', '_', $docName);
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $filePath = $docDir . $filename;
 
                 if (move_uploaded_file($doc_files['tmp_name'][$i], $filePath)) {
-                    $db_doc_path = "/QTrace-Website/assets/uploads/documents/" . $doc_name;
+                    $db_doc_path = "/QTrace-Website/assets/upload/documents/" . $doc_name;
                     $doc_type = !empty($doc_names[$i]) ? $doc_names[$i] : "Other";
                     
                     $ins_doc = "INSERT INTO contractor_documents (

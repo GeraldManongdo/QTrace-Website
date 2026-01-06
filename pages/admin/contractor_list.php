@@ -108,7 +108,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <?php if($row['Contractor_Logo_Path']): ?>
-                                                            <img src="/QTrace-Website/uploads/logos/<?= $row['Contractor_Logo_Path'] ?>" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
+                                                            <img src="/QTrace-Website/upload/logos/<?= $row['Contractor_Logo_Path'] ?>" class="rounded-circle me-2" width="40" height="40" style="object-fit: cover;">
                                                         <?php else: ?>
                                                             <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width:40px; height:40px;">
                                                                 <?= substr($row['Contractor_Name'], 0, 1) ?>

@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Handle Logo Upload
        $logo_path = '';
         if (isset($_FILES['company_logo']) && $_FILES['company_logo']['error'] == 0) {
-            $logoDir = "../../assets/uploads/logos/";
+            $logoDir = "../../assets/upload/logos/";
             if (!is_dir($logoDir)) mkdir($logoDir, 0777, true);
             $ext = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
             $safe_company_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
@@ -66,7 +66,7 @@ if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
 }
         //Insert Legal Documents
         if (!empty($_FILES['document_files']['name'][0])) {
-            $docDir = "../../assets/uploads/documents/";
+            $docDir = "../../assets/upload/documents/";
             if (!is_dir($docDir)) mkdir($docDir, 0777, true);
             
             $stmtDoc = $conn->prepare("INSERT INTO contractor_documents_table (
