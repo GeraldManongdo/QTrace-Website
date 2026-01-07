@@ -18,7 +18,7 @@
                   <a class="nav-link " href="#">Projects</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link " href="#">Map</a>
+                  <a class="nav-link " href="/QTrace-Website/pages/public/map.php">Map</a>
               </li>
               <li class="nav-item px-3">
                   <a class="nav-link " href="#">Contractors</a>
