@@ -111,6 +111,30 @@
         </li>
 
         <li class="nav-item">
+            <a class="nav-link text-black d-flex justify-content-between align-items-center <?php echo ($current_page == 'ongoing') ? '' : 'collapsed'; ?>" 
+            data-bs-toggle="collapse" href="#submenu3" 
+            aria-expanded="<?php echo ($current_page == 'ongoing') ? 'true' : 'false'; ?>">
+                <span><i class="bi bi-person"></i> Accounts</span>
+                <i class="bi bi-chevron-down small"></i>
+            </a>
+            
+            <div class="collapse <?php echo in_array($current_page, ['accountList', 'addAccount']) ? 'show' : ''; ?>" id="submenu3">
+                <ul class="nav nav-pills flex-column ms-3 mt-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-black <?php echo ($current_page == 'accountList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/account-list">
+                            Account List
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black <?php echo ($current_page == 'addAccount') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-account">
+                            Add Account
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="nav-item">
             <a href="/QTrace-Website/history" class="nav-link text-black <?php echo ($current_page == 'history') ? 'active' : ''; ?>">
                 <i class="bi bi-archive"></i> Audit Logs
             </a>

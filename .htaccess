@@ -21,7 +21,8 @@ RewriteRule ^add-engineer$ pages/admin/add_engineer.php [NC,L]
 RewriteRule ^history$ pages/admin/history.php [NC,L]
 RewriteRule ^reports$ pages/admin/reports.php [NC,L]
 
-RewriteRule ^add-user$ pages/admin/add_user.php [NC,L]
+RewriteRule ^add-account$ pages/admin/add_account.php [NC,L]
+RewriteRule ^account-list$ pages/admin/account_list.php [NC,L]
 
 #For Public pages
 RewriteRule ^home$ pages/public/home.php [NC,L]

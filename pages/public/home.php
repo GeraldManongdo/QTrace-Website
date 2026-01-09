@@ -195,7 +195,7 @@
             <section class="container text-center py-5 mt-4">
                 <div class="card bg-color-primary text-light py-4 rounded-5" style="width: 100%;margin:auto;">
                     <div class="card-body p-5">
-                        <div class="title-section mb-1 py-4 px-5">
+                        <div class="title-section mb-1 py-lg-4 px-lg-5">
                             <h2 class="fw-bold fs-3 mb-3">Start Exploring Public Projects</h2>
                             <p class="fs-6">View our interactive map to see what's happening in your barangay. All project data is updated in real-time by city officials.</p>
                         </div>

@@ -62,7 +62,7 @@
                     </div>
                     
                     <!-- Filter Form -->
-                    <div class="row g-3">
+
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body">
                                 <form method="GET" class="row g-3">
@@ -148,7 +148,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
                 </div>
             </main>
         </div>
