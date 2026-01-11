@@ -1,6 +1,7 @@
 <?php 
     $current_page = 'contractorList'; 
     require('../../database/controllers/get_contractor.php');
+    include('../../database/connection/security.php');
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +48,7 @@
                         <!-- Breadcrumb -->
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                            <a href="/Project/Qtrace/dashboard">Home</a>
+                            <a href="/QTrace-Website/dashboard">Home</a>
                             </li>
                             <li class="breadcrumb-item active">Contractor List</li>
                         </ol>
@@ -62,7 +63,7 @@
                     </div>
                     
                     <!-- Filter Form -->
-                    <div class="row g-3">
+
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body">
                                 <form method="GET" class="row g-3">
@@ -76,7 +77,7 @@
                                     </div>
                                     <div class="col-md-3 d-flex align-items-end row g-2">
                                         <div class="col-6">
-                                            <button class="btn bg-color-primary text-light fw-medium w-100" type="submit">Apply Filters</button>
+                                            <button class="btn bg-color-primary text-light fw-medium w-100" type="submit">Apply</button>
                                         </div>
                                         <div class="col-6">
                                             <button type="reset" class="btn btn-outline-secondary w-100 fw-medium">Reset</button>
@@ -148,7 +149,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
                 </div>
             </main>
         </div>
@@ -159,7 +159,7 @@
         </script>
          
         <!-- Reusable Script -->
-        <script src=""></script>
+        <script src="/QTrace-Website/assets/js/mouseMovement.js"></script>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

@@ -20,3 +20,17 @@ RewriteRule ^engineer-list$ pages/admin/engineer_list.php [NC,L]
 RewriteRule ^add-engineer$ pages/admin/add_engineer.php [NC,L]
 RewriteRule ^history$ pages/admin/history.php [NC,L]
 RewriteRule ^reports$ pages/admin/reports.php [NC,L]
+
+RewriteRule ^add-account$ pages/admin/add_account.php [NC,L]
+RewriteRule ^account-list$ pages/admin/account_list.php [NC,L]
+
+RewriteRule ^login$ pages/admin/login.php [NC,L]
+RewriteRule ^logout$ database/controllers/logout.php [NC,L]
+
+#For Public pages
+RewriteRule ^home$ pages/public/home.php [NC,L]
+RewriteRule ^projects$ pages/public/project.php [NC,L]
+RewriteRule ^project-details$ pages/public/projectDetails.php [NC,L]
+RewriteRule ^map$ pages/public/map.php [NC,L]
+RewriteRule ^contractors$ pages/public/contractors.php [NC,L]
+RewriteRule ^contractors-details$ pages/public/contractorDetails.php [NC,L]

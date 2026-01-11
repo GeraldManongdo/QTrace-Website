@@ -12,19 +12,19 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-md-3 gap-sm-2 text-white">
               <li class="nav-item px-3 ">
-                  <a class="nav-link active" href="#">Home</a>
+                  <a class="nav-link active" href="/QTrace-Website/home">Home</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link " href="#">Projects</a>
+                  <a class="nav-link " href="/QTrace-Website/projects">Projects</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link " href="#">Map</a>
+                  <a class="nav-link " href="/QTrace-Website/map">Map</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link " href="#">Contractors</a>
+                  <a class="nav-link " href="/QTrace-Website/contractors">Contractors</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link " href="#">About Us</a>
+                  <a class="nav-link " href="/QTrace-Website/about">About Us</a>
               </li>
             </ul>
         </div>

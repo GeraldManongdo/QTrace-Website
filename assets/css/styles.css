@@ -1,9 +1,5 @@
 @import url("./theme.css");
 
-html {
-  scroll-behavior: smooth;
-  overflow: hidden;
-}
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -16,7 +12,7 @@ body {
 }
 
 .bg-color-accent {
-  background-color: var(--accent);
+  background-color: var(--accent) ;
   color: var(--background) !important;
 }
 
@@ -32,6 +28,9 @@ body {
   background-color: var(--background) !important;
 }
 
+.btn-blue-primary {
+   background-color: var(--btn-blue-primary) !important;
+}
 /* Fonts */
 .fs-8 {
   font-size: 0.8rem;

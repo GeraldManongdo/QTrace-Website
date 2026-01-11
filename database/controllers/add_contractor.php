@@ -29,8 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         //Insert Main Contractor Record
-        $sql = "INSERT INTO contractor_table (Contractor_Logo_Path, Contractor_Name, Owner_Name, Company_Address, Contact_Number, Company_Email_Address	, Years_Of_Experience, Additional_Notes) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO contractor_table (
+                    Contractor_Logo_Path, 
+                    Contractor_Name, 
+                    Owner_Name, 
+                    Company_Address, 
+                    Contact_Number, 
+                    Company_Email_Address, 
+                    Years_Of_Experience, 
+                    Additional_Notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssssssis", $logo_path, $company_name, $owner_name, $address, $contact_number, $email, $years_experience, $notes);
         $stmt->execute();
@@ -38,7 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
     
-    $stmtEx = $conn->prepare("INSERT INTO contractor_expertise_table (Contractor_Id, Expertise) VALUES (?, ?)");
+    $stmtEx = $conn->prepare("INSERT INTO contractor_expertise_table (
+                                Contractor_Id, 
+                                Expertise
+                                ) VALUES (?, ?)");
     
     foreach ($_POST['expertise'] as $skill) {
         $cleanSkill = trim($skill);
@@ -58,20 +69,19 @@ if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
             $docDir = "../../uploads/documents/";
             if (!is_dir($docDir)) mkdir($docDir, 0777, true);
             
-            $stmtDoc = $conn->prepare("INSERT INTO contractor_documents_table (Contractor_Id, Document_Type, Document_Path) VALUES (?, ?, ?)");
+            $stmtDoc = $conn->prepare("INSERT INTO contractor_documents_table (
+                                            Contractor_Id, 
+                                            Document_Type, 
+                                            Document_Path
+                                            ) VALUES (?, ?, ?)");
             
             foreach ($_FILES['document_files']['name'] as $key => $val) {
                 if ($_FILES['document_files']['error'][$key] == 0) {
                     $docName = $_POST['document_names'][$key];
                     $tmpPath = $_FILES['document_files']['tmp_name'][$key];
-                    
                     $ext = pathinfo($_FILES['document_files']['name'][$key], PATHINFO_EXTENSION);
-                    
-                
                     $safe_company = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
                     $safe_doc = preg_replace('/[^A-Za-z0-9\-]/', '_', $docName);
-
-
                     $filename = $safe_company . "._." . $safe_doc . "." . $ext;
                     $filePath = $docDir . $filename;
                     

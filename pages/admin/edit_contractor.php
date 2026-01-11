@@ -1,6 +1,7 @@
 <?php 
-$current_page = 'contractorList'; 
+    $current_page = 'contractorList'; 
     require('../../database/controllers/get_view_contractor.php'); 
+    include('../../database/connection/security.php');
 ?>
 
 <!DOCTYPE html>
@@ -281,6 +282,7 @@ $current_page = 'contractorList';
     </script>
          
     <!-- Reusable Script -->
+     <script src="/QTrace-Website/assets/js/mouseMovement.js"></script>
     <script src="/QTrace-Website/assets/js/imageholder.js"></script>
     <script src="/QTrace-Website/assets/js/dynamicFieldText.js"></script>
     <script src="/QTrace-Website/assets/js/dynamicFieldFile.js"></script>

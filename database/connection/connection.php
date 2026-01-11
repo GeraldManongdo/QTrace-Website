@@ -1,9 +1,12 @@
 <?php
+
+
 // Database configuration
 $host     = "localhost";
 $username = "root";
 $password = "";
 $dbname   = "qtrace";
+$_SESSION['success'] = "";
 
 // Enable mysqli error reporting for easier debugging
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -19,4 +22,6 @@ try {
     // If connection fails, stop the script and show the error
     die("Connection failed: " . $e->getMessage());
 }
+
+
 ?>

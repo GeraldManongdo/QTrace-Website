@@ -30,11 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 2. Handle Logo Upload (If a new one is selected)
     if (!empty($_FILES['company_logo']['name'])) {
         $target_dir = "../../assets/uploads/logos/";
-        $file_ext = pathinfo($_FILES["company_logo"]["name"], PATHINFO_EXTENSION);
-        $file_name = "logo_" . $id . "_" . time() . "." . $file_ext;
-        $target_file = $target_dir . $file_name;
+        $ext = pathinfo($_FILES['company_logo']['name'], PATHINFO_EXTENSION);
+        $safe_company_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
+        $filename = $safe_company_name . "_"."." . $ext;
+        $logo_path = $logoDir . $filename;
 
-        if (move_uploaded_file($_FILES["company_logo"]["tmp_name"], $target_file)) {
+        if (move_uploaded_file($_FILES["company_logo"]["tmp_name"], $logo_path)) {
             $update_logo = "UPDATE contractors SET Contractor_Logo_Path = ? WHERE Contractor_Id = ?";
             $logo_stmt = $conn->prepare($update_logo);
             $db_path = "/QTrace-Website/assets/uploads/logos/" . $file_name;
@@ -50,7 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $del_stmt->execute();
 
     if (isset($_POST['expertise'])) {
-        $ins_exp = "INSERT INTO contractor_expertise_table (Contractor_Id, Expertise) VALUES (?, ?)";
+        $ins_exp = "INSERT INTO contractor_expertise_table (
+                        Contractor_Id, 
+                        Expertise
+                        ) VALUES (?, ?)";
         $exp_stmt = $conn->prepare($ins_exp);
         foreach ($_POST['expertise'] as $skill) {
             if (!empty($skill)) {
@@ -68,15 +72,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         for ($i = 0; $i < count($doc_files['name']); $i++) {
             if ($doc_files['error'][$i] === 0) {
                 $doc_dir = "../../assets/uploads/documents/";
-                $doc_ext = pathinfo($doc_files['name'][$i], PATHINFO_EXTENSION);
-                $doc_name = "doc_" . $id . "_" . time() . "_" . $i . "." . $doc_ext;
-                $doc_path = $doc_dir . $doc_name;
+                   $ext = pathinfo($_FILES['document_files']['name'][$key], PATHINFO_EXTENSION);
+                    $safe_company = preg_replace('/[^A-Za-z0-9\-]/', '_', $company_name);
+                    $safe_doc = preg_replace('/[^A-Za-z0-9\-]/', '_', $docName);
+                    $filename = $safe_company . "._." . $safe_doc . "." . $ext;
+                    $filePath = $docDir . $filename;
 
-                if (move_uploaded_file($doc_files['tmp_name'][$i], $doc_path)) {
+                if (move_uploaded_file($doc_files['tmp_name'][$i], $filePath)) {
                     $db_doc_path = "/QTrace-Website/assets/uploads/documents/" . $doc_name;
                     $doc_type = !empty($doc_names[$i]) ? $doc_names[$i] : "Other";
                     
-                    $ins_doc = "INSERT INTO contractor_documents (Contractor_Id, Document_Type, Document_Path) VALUES (?, ?, ?)";
+                    $ins_doc = "INSERT INTO contractor_documents (
+                                    Contractor_Id, 
+                                    Document_Type, 
+                                    Document_Path
+                                    ) VALUES (?, ?, ?)";
                     $doc_stmt = $conn->prepare($ins_doc);
                     $doc_stmt->bind_param("iss", $id, $doc_type, $db_doc_path);
                     $doc_stmt->execute();
