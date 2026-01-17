@@ -18,8 +18,6 @@ RewriteRule ^add-contractor$ pages/admin/add_contractor.php [NC,L]
 RewriteRule ^view-contractor$ pages/admin/view_contractor.php [NC,L]
 RewriteRule ^edit-contractor$ pages/admin/edit_contractor.php [NC,L]
 
-RewriteRule ^engineer-list$ pages/admin/engineer_list.php [NC,L]
-RewriteRule ^add-engineer$ pages/admin/add_engineer.php [NC,L]
 RewriteRule ^history$ pages/admin/history.php [NC,L]
 RewriteRule ^project-articles$ pages/admin/project_articles.php [NC,L]
 RewriteRule ^view-article$ pages/admin/view_article.php [NC,L]

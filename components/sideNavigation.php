@@ -84,7 +84,7 @@
                 <i class="bi bi-chevron-down small"></i>
             </a>
             
-            <div class="collapse <?php echo in_array($page_name, ['contractorList', 'addContractor', 'engineerList', 'addEngineer']) ? 'show' : ''; ?>" id="submenu2">
+            <div class="collapse <?php echo in_array($page_name, ['contractorList', 'addContractor']) ? 'show' : ''; ?>" id="submenu2">
                 <ul class="nav nav-pills flex-column ms-3 mt-1">
                     <li class="nav-item">
                         <a class="nav-link text-black <?php echo ($page_name == 'contractorList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/contractor-list">
@@ -94,16 +94,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-black <?php echo ($page_name == 'addContractor') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-contractor">
                             Add Contractor
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($page_name == 'engineerList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/engineer-list">
-                            Engineer List
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black <?php echo ($page_name == 'addEngineer') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-engineer">
-                            Add Engineer
                         </a>
                     </li>
                 </ul>
