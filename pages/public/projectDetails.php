@@ -31,21 +31,135 @@
     <style>
         .main-card { border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .status-pill { border-radius: 50px; padding: 4px 12px; font-size: 0.85rem; font-weight: 500; }
-        .icon-box { width: 40px; height: 40px; background: #eef2ff; color: #4f46e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .icon-box { width: 40px; height: 40px; background: rgba(26, 54, 93, 0.1); color: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
     
         /* Documents Styling */
-        .doc-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; transition: background 0.2s; }
-        .doc-card:hover { background-color: #f8fafc; }
-        .doc-icon { background: #e0f2fe; color: #0284c7; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .doc-card { border: 1px solid var(--surface); border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; transition: background 0.2s; }
+        .doc-card:hover { background-color: var(--background); }
+        .doc-icon { background: rgba(26, 54, 93, 0.1); color: var(--primary); width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
 
         /* Milestone/Gallery Styling */
-        .gallery-card { border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; transition: transform 0.2s; }
+        .gallery-card { border-radius: 12px; overflow: hidden; border: 1px solid var(--surface); transition: transform 0.2s; }
         .gallery-card:hover { transform: translateY(-5px); }
         .gallery-img { height: 200px; object-fit: cover; width: 100%; }
         
         /* Reports Styling */
-        .report-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.5rem; }
-        .official-response { background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 4px; padding: 1rem; margin-top: 1rem; }
+        .report-card { border: 1px solid var(--surface); border-radius: 10px; padding: 1.5rem; }
+        .official-response { background-color: rgba(26, 54, 93, 0.05); border-left: 4px solid var(--primary); border-radius: 4px; padding: 1rem; margin-top: 1rem; }
+        
+        /* Report List Styling */
+        .report-item { 
+            border: 1px solid var(--surface); 
+            border-radius: 10px; 
+            padding: 1.25rem; 
+            margin-bottom: 1rem; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            background: white;
+        }
+        .report-item:hover { 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            transform: translateY(-2px);
+        }
+        .report-item-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            margin-bottom: 0.75rem; 
+        }
+        .report-item-description { 
+            margin-bottom: 0.75rem; 
+            line-height: 1.5; 
+        }
+        .report-item-footer { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-top: 0.75rem; 
+            border-top: 1px solid var(--surface); 
+        }
+        
+        /* Chat Interface Styling */
+        #reportChatContainer { 
+            position: fixed; 
+            top: 0; 
+            right: 0; 
+            width: 450px; 
+            height: 100vh; 
+            background: white; 
+            box-shadow: -4px 0 20px rgba(0,0,0,0.15); 
+            z-index: 1050; 
+            display: none;
+            flex-direction: column;
+        }
+        .chat-header { 
+            padding: 1.5rem; 
+            border-bottom: 1px solid var(--surface); 
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 1.5rem; 
+            background: var(--background); 
+        }
+        .message { 
+            margin-bottom: 1.5rem; 
+            padding: 1rem; 
+            border-radius: 10px; 
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .message-header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 0.5rem; 
+            gap: 0.5rem;
+        }
+        .message-content { 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+        }
+        .original-report { 
+            border-left: 4px solid var(--primary); 
+            background: rgba(26, 54, 93, 0.05);
+        }
+        .admin-message { 
+            border-left: 4px solid var(--secondary); 
+        }
+        .user-message { 
+            border-left: 4px solid var(--accent); 
+        }
+        .system-message { 
+            background: rgba(246, 173, 85, 0.15); 
+            border: 1px solid var(--accent); 
+            text-align: center;
+            padding: 0.5rem;
+            font-style: italic;
+        }
+        .chat-input { 
+            padding: 1.5rem; 
+            border-top: 1px solid var(--surface); 
+            background: white;
+        }
+        .chat-input textarea { 
+            width: 100%; 
+            border: 1px solid var(--surface); 
+            border-radius: 8px; 
+            padding: 0.75rem; 
+            resize: none; 
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+        .chat-input textarea:focus { 
+            outline: none; 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+        }
     </style>
 
     <body class="bg-color-background">
@@ -143,7 +257,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between mb-3">
                                                 <span class="text-muted">Status:</span>
-                                                <span class="status-pill bg-success-subtle text-success">● <?php echo htmlspecialchars($project['Project_Status']); ?></span>
+                                                <span class="status-pill" style="background-color: rgba(217, 38, 46, 0.1); color: var(--secondary);">● <?php echo htmlspecialchars($project['Project_Status']); ?></span>
                                             </div>
                                             <div class="d-flex justify-content-between mb-3">
                                                 <span class="text-muted">Total Budget:</span>
@@ -176,7 +290,7 @@
                                                 <small class="text-muted">Uploaded on <?php echo date("Y-m-d", strtotime($doc['ProjectDocument_UploadedAt'])); ?></small>
                                             </div>
                                         </div>
-                                        <a href="<?php echo htmlspecialchars($doc['ProjectDocument_FileLocation']); ?>" class="btn btn-primary px-4 rounded-pill" download>
+                                        <a href="<?php echo htmlspecialchars($doc['ProjectDocument_FileLocation']); ?>" class="btn bg-color-primary text-white px-4 rounded-pill" download>
                                             <i class="bi bi-download me-2"></i>Download
                                         </a>
                                     </div>
@@ -193,7 +307,7 @@
                                                 <div class="p-3">
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                                         <h6 class="fw-bold mb-0"><?php echo htmlspecialchars($ms['projectMilestone_Phase']); ?></h6>
-                                                        <span class="badge bg-primary-subtle text-primary rounded-pill">Ongoing</span>
+                                                        <span class="badge rounded-pill" style="background-color: rgba(26, 54, 93, 0.1); color: var(--primary);">Ongoing</span>
                                                     </div>
                                                     <small class="text-muted">Uploaded: <?php echo date("Y-m-d", strtotime($ms['projectMilestone_UploadedAT'])); ?></small>
                                                 </div>
@@ -204,21 +318,21 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="reports">
-                                    <p class="text-muted mb-4">Citizen reports and feedback regarding this project. All verified reports receive official responses.</p>
-                                    <div class="report-card bg-white shadow-sm border">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h6 class="fw-bold mb-1">Jose Ramirez</h6>
-                                                <small class="text-muted">2024-12-10</small>
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <p class="text-muted mb-0">Report issues and communicate with project administrators</p>
+                                        <?php if(isset($_SESSION['user_ID'])): ?>
+                                        <button class="btn bg-color-primary text-white" id="newReportBtn">
+                                            <i class="bi bi-plus-circle me-2"></i>New Report
+                                        </button>
+                                        <?php endif; ?>
+                                    </div>
+                                    
+                                    <div id="reportsList">
+                                        <div class="text-center py-5">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
                                             </div>
-                                            <span class="badge bg-warning-subtle text-warning rounded-pill px-3">● Under Investigation</span>
-                                        </div>
-                                        <p class="mb-1"><strong>Issue Type:</strong> No Progress</p>
-                                        <p class="text-secondary">No construction activity observed for 5 days straight.</p>
-                                        
-                                        <div class="official-response">
-                                            <p class="mb-1 fw-bold small text-primary">Official Response</p>
-                                            <p class="mb-0 small text-dark">Team dispatched to investigate. Contractor has been contacted.</p>
+                                            <p class="mt-3 text-muted">Loading reports...</p>
                                         </div>
                                     </div>
                                 </div>
@@ -227,6 +341,82 @@
                     </div>
         </section>
     </main>
+
+    <!-- Chat Interface (Sliding Panel) -->
+    <div id="reportChatContainer">
+        <div class="chat-header">
+            <div>
+                <h5 class="mb-0" id="chatTitle"></h5>
+                <span id="chatStatus" class="badge"></span>
+                <span id="statusControls"></span>
+            </div>
+            <button class="btn btn-link text-white p-0" id="closeChatBtn" style="font-size: 1.5rem;">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+        </div>
+        
+        <div class="chat-input">
+            <textarea id="messageInput" rows="3" placeholder="Type your message... (Shift+Enter for new line)"></textarea>
+            <button class="btn bg-color-primary text-white w-100" id="sendMessageBtn">
+                <i class="bi bi-send me-2"></i>Send Message
+            </button>
+        </div>
+    </div>
+
+    <!-- New Report Modal -->
+    <div class="modal fade" id="newReportModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-flag me-2"></i>Submit New Report
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newReportForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Report Type <span class="text-danger">*</span></label>
+                            <select class="form-select" id="reportType" required>
+                                <option value="">Select issue type...</option>
+                                <option value="Safety Violation">Safety Violation</option>
+                                <option value="Delay Issue">Delay Issue</option>
+                                <option value="Quality Concern">Quality Concern</option>
+                                <option value="Noise Complaint">Noise Complaint</option>
+                                <option value="Traffic Disruption">Traffic Disruption</option>
+                                <option value="Environmental Issue">Environmental Issue</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="reportDescription" rows="4" 
+                                placeholder="Please provide detailed information about the issue..." required></textarea>
+                            <small class="text-muted">Be as specific as possible to help us address your concern</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Evidence (Optional)</label>
+                            <input type="file" class="form-control" id="reportEvidence" 
+                                accept="image/*,.pdf,.doc,.docx">
+                            <small class="text-muted">Upload photos or documents (Max 5MB)</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn bg-color-primary text-white" id="submitReportBtn">
+                        <i class="bi bi-send me-2"></i>Submit Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
         
         <?php
@@ -237,9 +427,20 @@
 
         <!-- Reusable Script -->
         <script src="/QTrace-Website/assets/js/map.js"></script>
+        <script src="/QTrace-Website/assets/js/reportChat.js"></script>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         
+        <!-- Initialize Report System -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                <?php if(isset($project['Project_ID'])): ?>
+                const projectID = <?php echo $project['Project_ID']; ?>;
+                const userRole = '<?php echo $_SESSION['user_Role'] ?? 'guest'; ?>';
+                initReportSystem(projectID, userRole);
+                <?php endif; ?>
+            });
+        </script>
     </body>
 </html>

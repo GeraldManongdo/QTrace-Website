@@ -135,7 +135,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="/QTrace-Website/project-reports" class="nav-link text-black <?php echo ($page_name == 'project_reports') ? 'active' : ''; ?>">
+            <a href="/QTrace-Website/reports" class="nav-link text-black <?php echo ($page_name == 'reports') ? 'active' : ''; ?>">
                 <i class="bi bi-file-text"></i> Reports
             </a>
         </li>
