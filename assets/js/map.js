@@ -14,7 +14,7 @@
 
         function getStatusColor(status) {
             const colors = {
-                'Planned': '#0d6efd',
+                'Planning': '#0d6efd',
                 'Ongoing': '#198754',
                 'Delayed': '#dc3545',
                 'Completed': '#6c757d'
@@ -44,7 +44,7 @@
                     </div>
                     <div class="meta fs-8 text-muted"><i class="bi bi-geo-alt"></i> ${address}</div>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fw-bold text-primary small">${budgetFormatted}</span>
+                        <span class="fw-bold small" style="color: var(--accent);">${budgetFormatted}</span>
                         <span class="badge" style="background-color: ${getStatusColor(proj.Project_Status)}">${proj.Project_Status}</span>
                     </div>
                 `;

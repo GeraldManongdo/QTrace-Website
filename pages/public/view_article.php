@@ -46,6 +46,11 @@
 
         <main>
             <section class="container py-5">
+                <div class="title-section mb-4">
+                    <h2 class="fw-bold"><?= htmlspecialchars($article['ProjectDetails_Title']) ?></h2>
+                    <p class="text-muted"></p>
+                </div>
+
                 <nav class="mb-3" aria-label="breadcrumb">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="/QTrace-Website/articles">Articles</a></li>
@@ -55,18 +60,6 @@
 
                 <article class="card border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <!-- Article Header with Project Info -->
-                        <header class="article-header">
-                            <div class="article-header-title">Project</div>
-                            <div class="article-header-project"><?= htmlspecialchars($article['ProjectDetails_Title']) ?></div>
-                            <div class="article-header-location">
-                                <i class="bi bi-geo-alt"></i> <?= htmlspecialchars($article['ProjectDetails_Barangay']) ?>
-                            </div>
-                            <div class="article-header-budget">
-                                Budget: <?= formatBudget($article['ProjectDetails_Budget']) ?>
-                            </div>
-                        </header>
-
                         <!-- Article Image -->
                         <?php if (!empty($article['article_photo_url'])): ?>
                             <div class="article-hero">
@@ -75,27 +68,18 @@
                         <?php endif; ?>
 
                         <!-- Article Type, Author, Date Meta -->
-                        <header class="mb-4">
-                            <span class="badge bg-info text-dark mb-2"><?= htmlspecialchars($article['article_type']) ?></span>
-                            <div class="article-meta text-muted">
-                                <div class="article-meta-item">
-                                    <i class="bi bi-person"></i>
-                                    <?= htmlspecialchars($article['author_name'] ?: 'Admin') ?>
-                                </div>
-                                <div class="article-meta-item">
-                                    <i class="bi bi-calendar"></i>
-                                    <?= date('M d, Y', strtotime($article['article_created_at'])) ?>
-                                </div>
-                                <div class="article-meta-item">
-                                    <?php 
-                                    $statusBadges = array(
-                                        'Published' => 'bg-success',
-                                        'Draft' => 'bg-warning text-dark'
-                                    );
-                                    $badgeClass = isset($statusBadges[$article['article_status']]) ? $statusBadges[$article['article_status']] : 'bg-secondary';
-                                    ?>
-                                    <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($article['article_status']) ?></span>
-                                </div>
+                        <header class="mb-2">
+                            <div class="article-header-title">Project</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="article-header-project"><?= htmlspecialchars($article['ProjectDetails_Title']) ?></div>
+                                <span class="badge bg-info text-dark mb-2"><?= htmlspecialchars($article['article_type']) ?></span>
+                            </div>
+
+                            <div class="article-header-location">
+                                <i class="bi bi-geo-alt"></i> <?= htmlspecialchars($article['ProjectDetails_Barangay']) ?>
+                            </div>
+                            <div class="article-header-budget">
+                                Budget: <?= formatBudget($article['ProjectDetails_Budget']) ?>
                             </div>
                         </header>
 
@@ -135,13 +119,6 @@
                         </div>
                     </div>
                 </article>
-
-                <!-- Navigation -->
-                <div class="d-flex gap-2 mt-4 justify-content-between">
-                    <a href="/QTrace-Website/articles" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-1"></i> Back to Articles
-                    </a>
-                </div>
             </section>
         </main>
 

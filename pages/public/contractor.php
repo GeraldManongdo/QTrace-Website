@@ -38,6 +38,39 @@
         
         .btn-profile { background-color: #003366; color: white; font-weight: 600; border-radius: 8px; border: none; padding: 10px; transition: 0.2s; }
         .btn-profile:hover { background-color: #002244; color: white; }
+        
+        /* Pagination Styling */
+        .pagination { gap: 5px; }
+        .pagination .page-link { 
+            border: 1px solid #dee2e6; 
+            border-radius: 8px; 
+            color: #003366; 
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .pagination .page-link:hover { 
+            background-color: #003366; 
+            color: white; 
+            border-color: #003366;
+        }
+        .pagination .page-item.active .page-link { 
+            background-color: #003366; 
+            border-color: #003366; 
+            color: white;
+            font-weight: 600;
+        }
+        .pagination .page-item.disabled .page-link { 
+            color: #6c757d; 
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        .pagination-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
     </style>
     <body class="bg-color-background">
 
@@ -145,6 +178,64 @@
                         </div>
                     <?php endif; ?>
                 </div>
+                <!-- Pagination Section -->
+                <?php if ($total_pages > 1): ?>
+                <div class="d-flex justify-content-between align-items-center mt-5 flex-wrap gap-3">
+                    <!-- Results Info -->
+                    <div class="pagination-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Showing <?= $start_from + 1 ?> to <?= min($start_from + $results_per_page, $total_records) ?> of <?= $total_records ?> contractors
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <nav aria-label="Contractor pagination">
+                        <ul class="pagination mb-0">
+                            <!-- Previous Button -->
+                            <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="<?= ($page > 1) ? "?page=".($page - 1)."&search=".urlencode($search)."&min_years=".$min_years : '#' ?>" aria-label="Previous">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <?php
+                            // Smart pagination - show first, last, current and nearby pages
+                            $range = 2; // Number of pages to show on each side of current page
+                            
+                            // Always show first page
+                            if ($page > $range + 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=1&search='.urlencode($search).'&min_years='.$min_years.'">1</a></li>';
+                                if ($page > $range + 2) {
+                                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                }
+                            }
+
+                            // Show pages around current page
+                            for ($i = max(1, $page - $range); $i <= min($total_pages, $page + $range); $i++) {
+                                $active_class = ($page == $i) ? 'active' : '';
+                                echo '<li class="page-item '.$active_class.'">
+                                        <a class="page-link" href="?page='.$i.'&search='.urlencode($search).'&min_years='.$min_years.'">'.$i.'</a>
+                                      </li>';
+                            }
+
+                            // Always show last page
+                            if ($page < $total_pages - $range) {
+                                if ($page < $total_pages - $range - 1) {
+                                    echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                }
+                                echo '<li class="page-item"><a class="page-link" href="?page='.$total_pages.'&search='.urlencode($search).'&min_years='.$min_years.'">'.$total_pages.'</a></li>';
+                            }
+                            ?>
+
+                            <!-- Next Button -->
+                            <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                                <a class="page-link" href="<?= ($page < $total_pages) ? "?page=".($page + 1)."&search=".urlencode($search)."&min_years=".$min_years : '#' ?>" aria-label="Next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <?php endif; ?>
 
             </section>
         </main>

@@ -1,6 +1,6 @@
 <?php 
     $current_page = 'home'; 
-
+    require('../../database/controllers/get_data.php');
 ?>
 
 <!DOCTYPE html>
@@ -71,13 +71,15 @@
 
                     <div class="row">
                         <div class="col-md-8">
-                            <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden bg-white">
-                                <span class="input-group-text  border-0 ps-3 fs-5">
-                                    <i class="bi bi-search text-muted"></i>
-                                </span>
-                                <input type="text" class="form-control border-0 py-3 fs-5" placeholder="Search for projects, barangays, or contractors...">
-                                <button class="btn bg-color-primary text-light px-4 m-2" type="button">Search</button>
-                            </div>
+                            <form action="/QTrace-Website/projects" method="GET" class="d-flex">
+                                <div class="input-group mb-3 shadow-sm rounded-3 overflow-hidden bg-white">
+                                    <span class="input-group-text  border-0 ps-3 fs-5">
+                                        <i class="bi bi-search text-muted"></i>
+                                    </span>
+                                    <input type="text" class="form-control border-0 py-3 fs-5" name="search" placeholder="Search for projects">
+                                    <button class="btn bg-color-primary text-light px-4 m-2" type="submit">Search</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -89,7 +91,7 @@
                         <div class="card stat-card p-4" style="background-color: #f0fff4;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h2 class="fw-bold mb-0">3</h2>
+                                    <h2 class="fw-bold mb-0"><?php echo $active_count; ?></h2>
                                     <p class="text-muted small mb-0">Active Projects</p>
                                 </div>
                                 <div class="py-2 px-3 bg-white rounded shadow-sm">
@@ -102,7 +104,7 @@
                         <div class="card stat-card p-4" style="background-color: #f0f7ff;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h2 class="fw-bold mb-0">1</h2>
+                                    <h2 class="fw-bold mb-0"><?php echo $completed_count; ?></h2>
                                     <p class="text-muted small mb-0">Completed Projects</p>
                                 </div>
                                 <div class="py-2 px-3 bg-white rounded shadow-sm">
@@ -115,7 +117,7 @@
                         <div class="card stat-card p-4" style="background-color: #fdf2ff;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h2 class="fw-bold mb-0">1</h2>
+                                    <h2 class="fw-bold mb-0"><?php echo $resolved_count; ?></h2>
                                     <p class="text-muted small mb-0">Resolved Citizen Reports</p>
                                 </div>
                                 <div class="py-2 px-3 bg-white rounded shadow-sm">
@@ -205,10 +207,10 @@
                             <p class="fs-6">View our interactive map to see what's happening in your barangay. All project data is updated in real-time by city officials.</p>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center gap-3 gap-md-5">
-                            <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;">
+                            <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;" onclick="window.location.href='/QTrace-Website/map'">
                                 Explore Project Map
                             </button>
-                            <button class="btn btn-light border px-5 py-2 fw-bold">
+                            <button class="btn btn-light border px-5 py-2 fw-bold" onclick="window.location.href='/QTrace-Website/login'">
                                 Sign In with QC ID
                             </button>
                         </div>

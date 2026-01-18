@@ -1,5 +1,6 @@
 <?php 
-    $current_page = 'aboutUs'; 
+    $current_page = 'aboutUs';
+    require('../../database/controllers/get_data.php');
 ?>
 
 <!DOCTYPE html>
@@ -300,7 +301,7 @@
                         <div class="col-md-3">
                             <div class="card stat-card p-4">
                                 <div class="text-center">
-                                    <div class="fs-1 text-primary-emphasis">150+</div>
+                                    <div class="fs-1 text-primary-emphasis"><?php echo $active_count; ?>+</div>
                                     <div>
                                         <h3 class="fw-medium text-center mb-0 fs-5 mb-2">Active Projects</h3>
                                         <p class="text-muted text-center small mb-0 ">Currently being tracked and monitored</p>
@@ -312,7 +313,7 @@
                         <div class="col-md-3">
                             <div class="card stat-card p-4">
                                 <div class="text-center">
-                                    <div class="fs-1 text-primary-emphasis">89</div>
+                                    <div class="fs-1 text-primary-emphasis"><?php echo $completed_count; ?></div>
                                     <div>
                                         <h3 class="fw-medium text-center mb-0 fs-5 mb-2">Completed Projects</h3>
                                         <p class="text-muted text-center small mb-0 ">Successfully delivered to communities</p>
@@ -324,7 +325,7 @@
                         <div class="col-md-3">
                             <div class="card stat-card p-4">
                                 <div class="text-center">
-                                    <div class="fs-1 text-primary-emphasis">2450+</div>
+                                    <div class="fs-1 text-primary-emphasis"><?php echo $citizens_count; ?>+</div>
                                     <div>
                                         <h3 class="fw-medium text-center mb-0 fs-5 mb-2">Registered Citizens</h3>
                                         <p class="text-muted text-center small mb-0 ">Actively engaged in monitoring</p>
@@ -336,7 +337,7 @@
                         <div class="col-md-3">
                             <div class="card stat-card p-4">
                                 <div class="text-center">
-                                    <div class="fs-1 text-primary-emphasis">98%</div>
+                                    <div class="fs-1 text-primary-emphasis"><?php echo $percentage; ?>%</div>
                                     <div>
                                         <h3 class="fw-medium text-center mb-0 fs-5 mb-2">Report Resolution</h3>
                                         <p class="text-muted text-center small mb-0 ">Citizen concerns addressed</p>
@@ -358,10 +359,10 @@
                             <p class="fs-6">Be part of building a more transparent and accountable Quezon City. Register today and start monitoring projects in your community.</p>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center gap-3 gap-md-5">
-                            <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;">
+                            <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;" onclick="window.location.href='/QTrace-Website/login'">
                                 Register As Citizen
                             </button>
-                            <button class="btn btn-light border px-5 py-2 fw-bold">
+                            <button class="btn btn-light border px-5 py-2 fw-bold" onclick="window.location.href='/QTrace-Website/projects'">
                                 Explore Projects
                             </button>
                         </div>

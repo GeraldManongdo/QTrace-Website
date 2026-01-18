@@ -47,11 +47,11 @@
                         <h4 class="fw-medium fs-5">Link</h4>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <a href="#" class="text-decoration-none text-light">Home</a>
-                        <a href="#" class="text-decoration-none text-light">Project</a>
-                        <a href="#" class="text-decoration-none text-light">Map</a>
-                        <a href="#" class="text-decoration-none text-light">Contractors</a>
-                        <a href="#" class="text-decoration-none text-light">About Us</a>
+                        <a href="/QTrace-Website/home" class="text-decoration-none text-light">Home</a>
+                        <a href="/QTrace-Website/projects" class="text-decoration-none text-light">Project</a>
+                        <a href="/QTrace-Website/map" class="text-decoration-none text-light">Map</a>
+                        <a href="/QTrace-Website/contractors" class="text-decoration-none text-light">Contractors</a>
+                        <a href="/QTrace-Website/about" class="text-decoration-none text-light">About Us</a>
                     </div>
                 </div>
             </div>
@@ -59,18 +59,22 @@
         </div>
         <hr>
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <p class="mb-0">© 2024 Quezon City Government. All rights reserved.</p>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+                
+                <p class="mb-2 mb-md-0">© 2024 Quezon City Government. All rights reserved.</p>
+                
                 <div>
-                    <span class="ps-3 fs-5">
-                        <a href="#"><i class="bi bi-facebook text-light"></i></a>
-                    </span>
-                    <span class="ps-3 fs-5">
-                        <a href="#"><i class="bi bi-twitter text-light"></i></a>
-                    </span>
-                    <span class="ps-3 fs-5">
-                        <a href="#"><i class="bi bi-globe text-light"></i></a>
-                    </span>
+                    <div class="d-flex">
+                        <span class="ps-3 fs-5">
+                            <a href="#"><i class="bi bi-facebook text-light"></i></a>
+                        </span>
+                        <span class="ps-3 fs-5">
+                            <a href="#"><i class="bi bi-twitter text-light"></i></a>
+                        </span>
+                        <span class="ps-3 fs-5">
+                            <a href="#"><i class="bi bi-globe text-light"></i></a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
