@@ -27,9 +27,6 @@
                   <a class="nav-link <?php echo ($current_page == 'articles') ? 'active' : ''; ?>" href="/QTrace-Website/articles">Articles</a>
               </li>
               <li class="nav-item px-3">
-                  <a class="nav-link <?php echo ($current_page == 'reports') ? 'active' : ''; ?>" href="/QTrace-Website/reports">Reports</a>
-              </li>
-              <li class="nav-item px-3">
                   <a class="nav-link <?php echo ($current_page == 'aboutUs') ? 'active' : ''; ?>" href="/QTrace-Website/about">About Us</a>
               </li>
             </ul>

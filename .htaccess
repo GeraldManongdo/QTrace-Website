@@ -23,7 +23,7 @@ RewriteRule ^project-articles$ pages/admin/project_articles.php [NC,L]
 RewriteRule ^view-article$ pages/admin/view_article.php [NC,L]
 RewriteRule ^add-article$ pages/admin/add_article.php [NC,L]
 
-RewritRule ^project-reports$ pages/admin/reports.php [NC,L]
+RewriteRule ^reports$ pages/admin/reports.php [NC,L]
 
 RewriteRule ^add-account$ pages/admin/add_account.php [NC,L]
 RewriteRule ^account-list$ pages/admin/list_account.php [NC,L]
@@ -43,7 +43,6 @@ RewriteRule ^projects$ pages/public/project.php [NC,L]
 RewriteRule ^project-details$ pages/public/projectDetails.php [NC,L]
 RewriteRule ^articles$ pages/public/articles.php [NC,L]
 RewriteRule ^article$ pages/public/view_article.php [NC,L]
-RewriteRule ^reports$ pages/public/reports.php [NC,L]
 
 
 RewriteRule ^contractors$ pages/public/contractor.php [NC,L]
