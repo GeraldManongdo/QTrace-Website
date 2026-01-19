@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require('../../database/connection/connection.php');
+require('audit_service.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data with strict validation
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Verify article exists
-    $article_check = $conn->query("SELECT article_photo_url FROM articles_table WHERE article_ID = $article_id");
+    $article_check = $conn->query("SELECT article_photo_url, article_type, article_description, article_status FROM articles_table WHERE article_ID = $article_id");
     if (!$article_check || $article_check->num_rows === 0) {
         $_SESSION['error'] = 'Article not found.';
         header('Location: /QTrace-Website/project-articles');
@@ -57,6 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $article_data = $article_check->fetch_assoc();
     $current_photo = $article_data['article_photo_url'];
+    
+    // Store old values for audit trail
+    $oldArticleVals = [
+        'Project_ID' => $project_id,
+        'article_type' => $article_data['article_type'],
+        'article_description' => $article_data['article_description'],
+        'article_photo_url' => $article_data['article_photo_url'],
+        'article_status' => $article_data['article_status']
+    ];
     
     // Validate project exists
     $project_check = $conn->query("SELECT Project_ID FROM projects_table WHERE Project_ID = $project_id AND Project_Status != 'Disabled'");
@@ -121,6 +131,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE article_ID = $article_id";
 
     if ($conn->query($sql) === TRUE) {
+        // Log the update to audit trail
+        $auditService = new AuditService($conn);
+        $userId = $_SESSION['user_ID'] ?? null;
+        
+        // Prepare new values for audit log
+        $newArticleVals = [
+            'Project_ID' => $project_id,
+            'article_type' => $report_type,
+            'article_description' => $description,
+            'article_photo_url' => $photo_url,
+            'article_status' => $status
+        ];
+        
+        $auditService->log($userId, 'UPDATE', 'Article', $article_id, $oldArticleVals, $newArticleVals);
+        
         $_SESSION['success_message'] = 'Article updated successfully!';
         header('Location: /QTrace-Website/project-articles');
         exit();

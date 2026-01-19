@@ -148,6 +148,67 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            <!-- Pagination -->
+                            <?php if ($total_pages > 1): ?>
+                            <div class="card-footer bg-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-muted">
+                                        Showing <?= (($page - 1) * $records_per_page) + 1 ?> to <?= min($page * $records_per_page, $total_records) ?> of <?= $total_records ?> projects
+                                    </div>
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination mb-0">
+                                            <!-- Previous Button -->
+                                            <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                                                <a class="page-link" href="?page=<?= $page - 1 ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($status) ? '&status=' . urlencode($status) : '' ?><?= $contractor_id > 0 ? '&contractor_id=' . $contractor_id : '' ?>" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+
+                                            <?php
+                                            // Calculate page range
+                                            $range = 2; // Number of pages to show on each side
+                                            $start = max(1, $page - $range);
+                                            $end = min($total_pages, $page + $range);
+
+                                            // First page
+                                            if ($start > 1): ?>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page=1<?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($status) ? '&status=' . urlencode($status) : '' ?><?= $contractor_id > 0 ? '&contractor_id=' . $contractor_id : '' ?>">1</a>
+                                                </li>
+                                                <?php if ($start > 2): ?>
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                <?php endif; ?>
+                                            <?php endif;
+
+                                            // Page numbers
+                                            for ($i = $start; $i <= $end; $i++): ?>
+                                                <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                                                    <a class="page-link" href="?page=<?= $i ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($status) ? '&status=' . urlencode($status) : '' ?><?= $contractor_id > 0 ? '&contractor_id=' . $contractor_id : '' ?>"><?= $i ?></a>
+                                                </li>
+                                            <?php endfor;
+
+                                            // Last page
+                                            if ($end < $total_pages): ?>
+                                                <?php if ($end < $total_pages - 1): ?>
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                <?php endif; ?>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?page=<?= $total_pages ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($status) ? '&status=' . urlencode($status) : '' ?><?= $contractor_id > 0 ? '&contractor_id=' . $contractor_id : '' ?>"><?= $total_pages ?></a>
+                                                </li>
+                                            <?php endif; ?>
+
+                                            <!-- Next Button -->
+                                            <li class="page-item <?= $page >= $total_pages ? 'disabled' : '' ?>">
+                                                <a class="page-link" href="?page=<?= $page + 1 ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($status) ? '&status=' . urlencode($status) : '' ?><?= $contractor_id > 0 ? '&contractor_id=' . $contractor_id : '' ?>" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                        
 

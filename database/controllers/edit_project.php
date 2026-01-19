@@ -1,6 +1,12 @@
 <?php
 // Database connection
 require('../connection/connection.php');
+require('audit_service.php');
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Capture project_id
@@ -9,6 +15,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($project_id <= 0) {
         die("Invalid project ID.");
     }
+
+    // Fetch old values for audit trail
+    $oldProjectQuery = "SELECT p.Contractor_ID, p.Project_Status, p.Project_Lng, p.Project_Lat, p.Project_Category,
+                             pd.ProjectDetails_Title, pd.ProjectDetails_Description, pd.ProjectDetails_Budget, 
+                             pd.ProjectDetails_Street, pd.ProjectDetails_Barangay, pd.ProjectDetails_ZIP_Code,
+                             pd.ProjectDetails_StartedDate, pd.ProjectDetails_EndDate
+                      FROM projects_table p 
+                      JOIN projectdetails_table pd ON p.Project_ID = pd.Project_ID 
+                      WHERE p.Project_ID = ?";
+    
+    $stmtOld = $conn->prepare($oldProjectQuery);
+    $stmtOld->bind_param("i", $project_id);
+    $stmtOld->execute();
+    $oldResult = $stmtOld->get_result();
+    $oldValues = $oldResult->fetch_assoc();
+    
+    $oldProjectVals = $oldValues ? [
+        'Contractor_ID' => $oldValues['Contractor_ID'],
+        'Project_Status' => $oldValues['Project_Status'],
+        'Project_Category' => $oldValues['Project_Category'],
+        'Project_Title' => $oldValues['ProjectDetails_Title'],
+        'Project_Description' => $oldValues['ProjectDetails_Description'],
+        'Project_Budget' => $oldValues['ProjectDetails_Budget'],
+        'Location' => $oldValues['ProjectDetails_Street'] . ", " . $oldValues['ProjectDetails_Barangay'] . ", " . $oldValues['ProjectDetails_ZIP_Code'],
+        'Started_Date' => $oldValues['ProjectDetails_StartedDate'],
+        'End_Date' => $oldValues['ProjectDetails_EndDate']
+    ] : null;
 
     // 1. Capture Data from "Project Information" & "Location"
     $contractor_id   = (int)$_POST['Contractor_ID'];
@@ -90,6 +123,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (move_uploaded_file($tmpPath, $serverPath)) {
                         $stmtDoc->bind_param("iss", $project_id, $webPath, $docName);
                         $stmtDoc->execute();
+                        
+                        // Log document upload to audit trail
+                        $auditService = new AuditService($conn);
+                        $userId = $_SESSION['user_id'] ?? null;
+                        $docData = [
+                            'Document_Type' => $docName,
+                            'File_Name' => $filename,
+                            'File_Location' => $webPath
+                        ];
+                        $auditService->log($userId, 'CREATE', 'ProjectDocument', $project_id, null, $docData);
                     }
                 }
             }
@@ -119,6 +162,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (move_uploaded_file($tmpPath, $serverPath)) {
                         $stmtMilestone->bind_param("iss", $project_id, $webPath, $phase);
                         $stmtMilestone->execute();
+                        
+                        // Log milestone image upload to audit trail
+                        $auditService = new AuditService($conn);
+                        $userId = $_SESSION['user_id'] ?? null;
+                        $milestoneData = [
+                            'Milestone_Phase' => $phase,
+                            'Image_File_Name' => $filename,
+                            'Image_Location' => $webPath
+                        ];
+                        $auditService->log($userId, 'CREATE', 'ProjectMilestone', $project_id, null, $milestoneData);
                     }
                 }
             }
@@ -126,7 +179,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Commit all changes if everything is successful
         $conn->commit();
-        header("Location: /QTrace-Website/pages/admin/view_project.php?id=" . $project_id . "&status=updated");
+
+        // --- LOG AUDIT ACTIVITY ---
+        $auditService = new AuditService($conn);
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        // Prepare new values for audit log
+        $newProjectVals = [
+            'Contractor_ID' => $contractor_id,
+            'Project_Status' => $project_status,
+            'Project_Category' => $project_category,
+            'Project_Title' => $project_title,
+            'Project_Description' => $project_description,
+            'Project_Budget' => $project_budget,
+            'Location' => "$street, $barangay, $zip_code",
+            'Started_Date' => $started_date,
+            'End_Date' => $end_date
+        ];
+        
+        $auditService->log($userId, 'UPDATE', 'Project', $project_id, $oldProjectVals, $newProjectVals);
+
+        header("Location: /QTrace-Website/view-project?id=" . $project_id . "&status=updated");
         exit();
 
     } catch (Exception $e) {

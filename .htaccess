@@ -19,7 +19,7 @@ RewriteRule ^view-contractor$ pages/admin/view_contractor.php [NC,L]
 RewriteRule ^edit-contractor$ pages/admin/edit_contractor.php [NC,L]
 
 RewriteRule ^history$ pages/admin/history.php [NC,L]
-RewriteRule ^project-articles$ pages/admin/project_articles.php [NC,L]
+RewriteRule ^article-list$ pages/admin/list_article.php [NC,L]
 RewriteRule ^view-article$ pages/admin/view_article.php [NC,L]
 RewriteRule ^project-reports$ pages/admin/project_reports.php [NC,L]
 RewriteRule ^add-article$ pages/admin/add_article.php [NC,L]
@@ -37,6 +37,7 @@ RewriteRule ^logout$ database/controllers/logout.php [NC,L]
 RewriteRule ^view-project$ pages/admin/view_project.php [NC,L]
 
 RewriteRule ^audit-list$ pages/admin/list_audit.php [NC,L]
+
 
 
 #For Public pages

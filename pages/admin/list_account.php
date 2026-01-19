@@ -1,6 +1,6 @@
 <?php 
     $page_name = 'accountList'; 
-    require('../../database/controllers/get_users_list.php');
+    require('../../database/controllers/get_admin_users_list.php');
     include('../../database/connection/security.php');
 ?>
 
@@ -125,6 +125,36 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- Pagination -->
+                        <?php if (isset($pagination) && $pagination['total_pages'] > 0): ?>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        Showing 
+                                        <span id="recordStart"><?php echo (($pagination['current_page'] - 1) * $pagination['per_page']) + 1; ?></span> 
+                                        to 
+                                        <span id="recordEnd"><?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']); ?></span> 
+                                        of 
+                                        <span id="totalRecords"><?php echo $pagination['total_records']; ?></span> 
+                                        accounts
+                                    </small>
+                                </div>
+                                <nav>
+                                    <ul class="pagination mb-0">
+                                        <li class="page-item <?php echo $pagination['current_page'] === 1 ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo max(1, $pagination['current_page'] - 1); ?>&search=<?php echo urlencode($_GET['search'] ?? ''); ?>">Previous</a>
+                                        </li>
+                                        <li class="page-item"><span class="page-link"><?php echo $pagination['current_page']; ?> of <?php echo $pagination['total_pages']; ?></span></li>
+                                        <li class="page-item <?php echo $pagination['current_page'] === $pagination['total_pages'] ? 'disabled' : ''; ?>">
+                                            <a class="page-link" href="?page=<?php echo min($pagination['total_pages'], $pagination['current_page'] + 1); ?>&search=<?php echo urlencode($_GET['search'] ?? ''); ?>">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </main>

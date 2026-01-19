@@ -1,6 +1,12 @@
 <?php
 // Database connection
 require('../connection/connection.php');
+require('audit_service.php');
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Capture contractor_id
@@ -9,6 +15,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($contractor_id <= 0) {
         die("Invalid contractor ID.");
     }
+
+    // Fetch old values for audit trail
+    $oldContractorQuery = "SELECT Contractor_Logo_Path, Contractor_Name, Owner_Name, Company_Address, 
+                                Contact_Number, Company_Email_Address, Years_Of_Experience, Additional_Notes
+                          FROM contractor_table WHERE Contractor_Id = ?";
+    
+    $stmtOld = $conn->prepare($oldContractorQuery);
+    $stmtOld->bind_param("i", $contractor_id);
+    $stmtOld->execute();
+    $oldResult = $stmtOld->get_result();
+    $oldValues = $oldResult->fetch_assoc();
+    
+    $oldContractorVals = $oldValues ? [
+        'Company_Name' => $oldValues['Contractor_Name'],
+        'Owner_Name' => $oldValues['Owner_Name'],
+        'Company_Address' => $oldValues['Company_Address'],
+        'Contact_Number' => $oldValues['Contact_Number'],
+        'Company_Email' => $oldValues['Company_Email_Address'],
+        'Years_Of_Experience' => $oldValues['Years_Of_Experience'],
+        'Logo_Path' => $oldValues['Contractor_Logo_Path'],
+        'Additional_Notes' => $oldValues['Additional_Notes']
+    ] : null;
 
     // Capture Information
     $company_name     = $conn->real_escape_string($_POST['company_name']);
@@ -112,12 +140,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (move_uploaded_file($tmpPath, $docDir . $filename)) {
                         $stmtDoc->bind_param("iss", $contractor_id, $docName, $filePath);
                         $stmtDoc->execute();
+                        
+                        // Log document upload to audit trail
+                        $auditService = new AuditService($conn);
+                        $userId = $_SESSION['user_id'] ?? null;
+                        $docData = [
+                            'Document_Type' => $docName,
+                            'File_Name' => $filename,
+                            'File_Location' => $filePath
+                        ];
+                        $auditService->log($userId, 'CREATE', 'ContractorDocument', $contractor_id, null, $docData);
                     }
                 }
             }
         }
 
         $conn->commit();
+
+        // --- LOG AUDIT ACTIVITY ---
+        $auditService = new AuditService($conn);
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        // Prepare new values for audit log
+        $newContractorVals = [
+            'Company_Name' => $company_name,
+            'Owner_Name' => $owner_name,
+            'Company_Address' => $address,
+            'Contact_Number' => $contact_number,
+            'Company_Email' => $email,
+            'Years_Of_Experience' => $years_experience,
+            'Logo_Path' => $logo_path ?? $oldValues['Contractor_Logo_Path'],
+            'Additional_Notes' => $notes
+        ];
+        
+        $auditService->log($userId, 'UPDATE', 'Contractor', $contractor_id, $oldContractorVals, $newContractorVals);
+
         header("Location: /QTrace-Website/pages/admin/view_contractor.php?id=" . $contractor_id . "&status=updated");
         exit();
 

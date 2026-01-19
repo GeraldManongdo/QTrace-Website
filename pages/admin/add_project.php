@@ -110,7 +110,7 @@ if ($contractorStmt) {
               <div class="col-12 card border-0 shadow-sm p-3">
 
                 
-                <form method="POST" action="/QTrace-Website/database/controllers/add_projectlists.php" id="multiStepForm" novalidate>
+                <form method="POST" action="/QTrace-Website/database/controllers/add_project.php" id="multiStepForm" enctype="multipart/form-data" novalidate>
                   <!-- Project Information -->
                   <div class="step-pane active" id="p0">
                     <legend>Project Information</legend>

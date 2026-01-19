@@ -1,6 +1,12 @@
 <?php
 // Database connection
 require('../connection/connection.php');
+require('audit_service.php');
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Capture Information
@@ -94,6 +100,25 @@ if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
         }
 
         $conn->commit();
+
+        // --- LOG AUDIT ACTIVITY ---
+        $auditService = new AuditService($conn);
+        $userId = $_SESSION['user_id'] ?? null;
+        
+        // Prepare new values for audit log
+        $newContractorVals = [
+            'Company_Name' => $company_name,
+            'Owner_Name' => $owner_name,
+            'Company_Address' => $address,
+            'Contact_Number' => $contact_number,
+            'Company_Email' => $email,
+            'Years_Of_Experience' => $years_experience,
+            'Logo_Path' => $logo_path,
+            'Additional_Notes' => $notes
+        ];
+        
+        $auditService->log($userId, 'CREATE', 'Contractor', $contractor_id, null, $newContractorVals);
+
         $msg = urlencode("Contractor added successfully.");
         header("Location: /QTrace-Website/contractor-list?status=success&msg=$msg"); // Redirect after success
         exit();

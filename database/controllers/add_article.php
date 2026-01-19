@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require('../../database/connection/connection.php');
+require('audit_service.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form data with strict validation
@@ -103,8 +104,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ($project_id, $user_id, '$report_type', '$description', '$photo_url', '$status')";
 
     if ($conn->query($sql) === TRUE) {
+        $article_id = $conn->insert_id;
+        
+        // Log the creation to audit trail
+        $auditService = new AuditService($conn);
+        $userId = $_SESSION['user_ID'] ?? null;
+        
+        // Prepare new values for audit log
+        $newArticleVals = [
+            'Project_ID' => $project_id,
+            'user_ID' => $user_id,
+            'article_type' => $report_type,
+            'article_description' => $description,
+            'article_photo_url' => $photo_url,
+            'article_status' => $status
+        ];
+        
+        $auditService->log($userId, 'CREATE', 'Article', $article_id, null, $newArticleVals);
+        
         $_SESSION['success_message'] = 'Article added successfully!';
-        header('Location: /QTrace-Website/project-articles');
+        header('Location: /QTrace-Website/article-list?status=succes');
         exit();
     } else {
         $_SESSION['error'] = 'Error adding article. Please try again.';
