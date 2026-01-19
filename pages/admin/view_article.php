@@ -124,8 +124,8 @@
                                 <a href="/QTrace-Website/edit-article?id=<?= $article['article_ID'] ?>" class="btn btn-primary">
                                     <i class="bi bi-pencil-square me-1"></i> Edit Article
                                 </a>
-                                <button class="btn btn-danger" onclick="deleteArticle(<?= $article['article_ID'] ?>)">
-                                    <i class="bi bi-trash me-1"></i> Delete
+                                <button class="btn btn-warning" onclick="archiveArticle(<?= $article['article_ID'] ?>)">
+                                    <i class="bi bi-archive me-1"></i> Archive
                                 </button>
                             </div>
                         </div>
@@ -136,10 +136,32 @@
 
         <!-- Scripts -->
         <script>
-            function deleteArticle(articleId) {
-                if (confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
-                    window.location.href = `/QTrace-Website/database/controllers/delete_article.php?id=${articleId}`;
+            function archiveArticle(articleId) {
+                if (!confirm('Are you sure you want to archive this article?')) {
+                    return;
                 }
+
+                const formData = new FormData();
+                formData.append('article_id', articleId);
+                formData.append('action', 'archive');
+
+                fetch('/QTrace-Website/database/controllers/delete_article.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Article archived successfully!');
+                        window.location.href = '/QTrace-Website/project-articles';
+                    } else {
+                        alert('Failed to archive article: ' + (data.message || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error archiving article. Please try again.');
+                });
             }
         </script>
         <script src="/QTrace-Website/assets/js/mouseMovement.js"></script>

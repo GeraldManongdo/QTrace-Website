@@ -1,13 +1,18 @@
 RewriteEngine On
 
+# Don't rewrite if request is for a real directory or file
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
 # 1. Remove .php extension
 # If the user types /dashboard, look for dashboard.php
-RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 # 2. (Optional) Redirect from pages/admin/ to a shorter path
 # This allows you to use: Qtrace-Website/admin-dashboard
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^dashboard$ pages/admin/dashboard.php [NC,L]
 RewriteRule ^project-list$ pages/admin/list_project.php [NC,L]
 RewriteRule ^project-map$ pages/admin/project_map.php [NC,L]
@@ -21,6 +26,7 @@ RewriteRule ^edit-contractor$ pages/admin/edit_contractor.php [NC,L]
 RewriteRule ^history$ pages/admin/history.php [NC,L]
 RewriteRule ^project-articles$ pages/admin/project_articles.php [NC,L]
 RewriteRule ^view-article$ pages/admin/view_article.php [NC,L]
+RewriteRule ^edit-article$ pages/admin/edit_article.php [NC,L]
 RewriteRule ^project-reports$ pages/admin/project_reports.php [NC,L]
 RewriteRule ^add-article$ pages/admin/add_article.php [NC,L]
 

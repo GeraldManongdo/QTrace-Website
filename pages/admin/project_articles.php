@@ -92,7 +92,6 @@
                             <div class="card-body">
                                 <div class="project-heading mb-3">
                                     <span class="fw-bold">All Articles</span>
-                                    <span class="text-muted small">Combined updates and articles across projects</span>
                                 </div>
 
                                 <?php 
