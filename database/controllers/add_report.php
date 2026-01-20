@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO report_table 
             (Project_ID, user_ID, report_type, report_description, 
              report_evidencesPhoto_URL, report_status, reportParent_ID) 
-            VALUES (?, ?, ?, ?, ?, 'open', NULL)";
+            VALUES (?, ?, ?, ?, ?, 'Sent', NULL)";
     
     try {
         $stmt = $conn->prepare($sql);

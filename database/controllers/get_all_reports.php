@@ -12,6 +12,11 @@ $status = $_GET['status'] ?? '';
 $type = $_GET['type'] ?? '';
 $projectID = $_GET['project_id'] ?? '';
 
+// Pagination settings
+$per_page = 10;
+$current_page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($current_page - 1) * $per_page;
+
 // Build SQL query with filters
 $sql = "SELECT 
             r.report_ID,
@@ -53,35 +58,85 @@ if (!empty($projectID)) {
 
 $sql .= " ORDER BY r.report_CreatedAt DESC";
 
+// Build parameters first (needed for both count and main query)
+$params = [];
+$types = '';
+
+if (!empty($search)) {
+    $searchParam = "%$search%";
+    $params[] = $searchParam;
+    $params[] = $searchParam;
+    $params[] = $searchParam;
+    $types .= 'sss';
+}
+
+if (!empty($status)) {
+    $params[] = $status;
+    $types .= 's';
+}
+
+if (!empty($type)) {
+    $params[] = $type;
+    $types .= 's';
+}
+
+if (!empty($projectID)) {
+    $params[] = $projectID;
+    $types .= 'i';
+}
+
+// Count total records for pagination
+$countSql = "SELECT COUNT(*) as total
+        FROM report_table r
+        LEFT JOIN user_table u ON r.user_ID = u.user_ID
+        LEFT JOIN projects_table p ON r.Project_ID = p.Project_ID
+        LEFT JOIN projectdetails_table pd ON p.Project_ID = pd.Project_ID
+        WHERE r.reportParent_ID IS NULL";
+
+// Apply same filters to count query
+if (!empty($search)) {
+    $countSql .= " AND (r.report_description LIKE ? OR r.report_type LIKE ? OR pd.ProjectDetails_Title LIKE ?)";
+}
+
+if (!empty($status)) {
+    $countSql .= " AND r.report_status = ?";
+}
+
+if (!empty($type)) {
+    $countSql .= " AND r.report_type = ?";
+}
+
+if (!empty($projectID)) {
+    $countSql .= " AND r.Project_ID = ?";
+}
+
+// Get total count
+try {
+    $countStmt = $conn->prepare($countSql);
+    if (!empty($params)) {
+        $countStmt->bind_param($types, ...$params);
+    }
+    $countStmt->execute();
+    $countResult = $countStmt->get_result();
+    $total_records = $countResult->fetch_assoc()['total'];
+    $total_pages = ceil($total_records / $per_page);
+    $countStmt->close();
+} catch (Exception $e) {
+    error_log("Error counting reports: " . $e->getMessage());
+    $total_records = 0;
+    $total_pages = 0;
+}
+
+// Add LIMIT to main query
+$sql .= " LIMIT ? OFFSET ?";
+
+// Add pagination parameters to the params array
+$params[] = $per_page;
+$params[] = $offset;
+$types .= 'ii';
+
 try {
     $stmt = $conn->prepare($sql);
-    
-    // Bind parameters dynamically
-    $params = [];
-    $types = '';
-    
-    if (!empty($search)) {
-        $searchParam = "%$search%";
-        $params[] = $searchParam;
-        $params[] = $searchParam;
-        $params[] = $searchParam;
-        $types .= 'sss';
-    }
-    
-    if (!empty($status)) {
-        $params[] = $status;
-        $types .= 's';
-    }
-    
-    if (!empty($type)) {
-        $params[] = $type;
-        $types .= 's';
-    }
-    
-    if (!empty($projectID)) {
-        $params[] = $projectID;
-        $types .= 'i';
-    }
     
     if (!empty($params)) {
         $stmt->bind_param($types, ...$params);
@@ -89,6 +144,14 @@ try {
     
     $stmt->execute();
     $result = $stmt->get_result();
+    
+    // Prepare pagination data
+    $pagination = [
+        'current_page' => $current_page,
+        'per_page' => $per_page,
+        'total_records' => $total_records,
+        'total_pages' => $total_pages
+    ];
     
 } catch (Exception $e) {
     error_log("Error fetching reports: " . $e->getMessage());

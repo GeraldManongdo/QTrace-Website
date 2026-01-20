@@ -1,4 +1,5 @@
 <?php 
+    $page_name = 'accountList';
     require('../../database/connection/connection.php');
 
     // 1. Get ID from URL and protect against basic injection

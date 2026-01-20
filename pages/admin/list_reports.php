@@ -136,11 +136,12 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th style="width: 8%;">Report ID</th>
-                                            <th style="width: 35%;">Report Description</th>
+                                            <th style="width: 20%;">Project Name</th>
+                                            <th class="d-none d-md-table-cell" style="width: 10%;">User Name</th>
                                             <th class="text-center" style="width: 10%;">Status</th>
                                             <th class="d-none d-md-table-cell" style="width: 12%;">Type</th>
-                                            <th style="width: 10%;">Project ID</th>
-                                            <th class="d-none d-md-table-cell" style="width: 10%;">User ID</th>
+                                            
+                                            
                                             <th style="width: 10%;">Created Date</th>
                                             <th class="text-center" style="width: 5%;">Actions</th>
                                         </tr>
@@ -153,97 +154,36 @@
                                                     <span class="fw-bold">RPT-<?php echo str_pad($row['report_ID'], 3, '0', STR_PAD_LEFT); ?></span>
                                                 </td>
                                                 <td>
-                                                    <div class="text-dark mb-1">
-                                                        <?php echo htmlspecialchars(substr($row['report_description'], 0, 120)); ?>
-                                                        <?php if(strlen($row['report_description']) > 120) echo '...'; ?>
-                                                    </div>
-                                                    <?php if(!empty($row['report_evidencesPhoto_URL'])): ?>
-                                                        <a href="<?php echo htmlspecialchars($row['report_evidencesPhoto_URL']); ?>" 
-                                                           target="_blank" class="evidence-link">
-                                                            <i class="bi bi-image me-1"></i>1 evidence photo(s)
-                                                        </a>
-                                                    <?php endif; ?>
+                                                    <?php echo htmlspecialchars($row['ProjectDetails_Title']); ?>
+                                                </td>
+                                                <td class="d-none d-md-table-cell">
+                                                    <?php echo htmlspecialchars($row['FirstName'] . ' ' . $row['LastName']); ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php 
-                                                        $statusClass = 'status-open';
-                                                        $statusText = ucfirst($row['report_status']);
-                                                        if($row['report_status'] == 'in progress') {
-                                                            $statusClass = 'status-in-progress';
-                                                            $statusText = 'In Review';
-                                                        } elseif($row['report_status'] == 'resolved') {
-                                                            $statusClass = 'status-resolved';
-                                                            $statusText = 'Resolved';
-                                                        } elseif($row['report_status'] == 'open') {
-                                                            $statusText = 'Reading';
-                                                        }
-                                                    ?>
-                                                    <span class="status-badge <?php echo $statusClass; ?>">
-                                                        <?php echo $statusText; ?>
-                                                    </span>
+                                                        <?php echo $row['report_status']; ?>
                                                 </td>
                                                 <td class="d-none d-md-table-cell">
                                                     <span class="text-dark"><?php echo htmlspecialchars($row['report_type'] ?? 'N/A'); ?></span>
                                                 </td>
-                                                <td>
-                                                    <a href="/QTrace-Website/view-project?id=<?php echo $row['Project_ID']; ?>" 
-                                                       class="text-decoration-none fw-medium" style="color: var(--primary);">
-                                                        PRJ-<?php echo date('Y', strtotime($row['report_CreatedAt'])); ?>-<?php echo str_pad($row['Project_ID'], 3, '0', STR_PAD_LEFT); ?>
-                                                    </a>
-                                                </td>
-                                                <td class="d-none d-md-table-cell">
-                                                    <span class="text-dark fw-medium">USR-<?php echo $row['user_ID']; ?></span>
-                                                </td>
+                                                
                                                 <td>
                                                     <?php echo date('M d, Y', strtotime($row['report_CreatedAt'])); ?>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
-                                                                          <a href="/QTrace-Website/pages/admin/view_report.php?id=<?php echo $row['report_ID']; ?>" 
-                                                           class="btn btn-sm action-btn" style="border: 1px solid var(--primary); color: var(--primary);" 
+                                                        <a href="/QTrace-Website/view-report?id=<?php echo $row['report_ID']; ?>" 
+                                                           class="btn btn-sm btn-outline-primary" 
                                                            title="View Report">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
-                                                        <button class="btn btn-sm action-btn dropdown-toggle dropdown-toggle-split" style="border: 1px solid var(--surface); color: #6c757d;" 
-                                                                type="button" data-bs-toggle="dropdown" title="More actions">
-                                                            <i class="bi bi-three-dots-vertical"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li>
-                                                                <a class="dropdown-item" href="/QTrace-Website/pages/admin/view_report.php?id=<?php echo $row['report_ID']; ?>">
-                                                                    <i class="bi bi-eye me-2"></i>View Details
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item" href="javascript:void(0)" 
-                                                                   onclick="openChatModal(<?php echo $row['report_ID']; ?>)">
-                                                                    <i class="bi bi-chat-dots me-2"></i>View Chat (<?php echo $row['message_count']; ?>)
-                                                                </a>
-                                                            </li>
-                                                            <li><hr class="dropdown-divider"></li>
-                                                            <?php if($row['report_status'] != 'resolved'): ?>
-                                                            <li>
-                                                                <a class="dropdown-item" href="javascript:void(0)" 
-                                                                   onclick="updateStatus(<?php echo $row['report_ID']; ?>, 'in progress')">
-                                                                    <i class="bi bi-clock-history me-2"></i>Mark In Progress
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item" href="javascript:void(0)" 
-                                                                   onclick="updateStatus(<?php echo $row['report_ID']; ?>, 'resolved')">
-                                                                    <i class="bi bi-check-circle me-2"></i>Mark Resolved
-                                                                </a>
-                                                            </li>
-                                                            <?php endif; ?>
-                                                        </ul>
                                                     </div>
                                                 </td>
+                                            
                                             </tr>
                                             <?php endwhile; ?>
                                         <?php else: ?>
                                             <tr>
                                                 <td colspan="8" class="text-center py-5 text-muted">
-                                                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.3;"></i>
                                                     <p class="mt-3 mb-0">No reports found matching your criteria.</p>
                                                 </td>
                                             </tr>
@@ -253,11 +193,31 @@
                             </div>
                         </div>
 
-                        <?php if ($result && $result->num_rows > 0): ?>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <small class="text-muted">
-                                Showing <?php echo $result->num_rows; ?> report(s)
-                            </small>
+                        <!-- Pagination -->
+                        <?php if (!empty($pagination) && $pagination['total_pages'] > 0): ?>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-muted">
+                                    Showing 
+                                    <span id="recordStart"><?php echo (($pagination['current_page'] - 1) * $pagination['per_page']) + 1; ?></span> 
+                                    to 
+                                    <span id="recordEnd"><?php echo min($pagination['current_page'] * $pagination['per_page'], $pagination['total_records']); ?></span> 
+                                    of 
+                                    <span id="totalRecords"><?php echo $pagination['total_records']; ?></span> 
+                                    reports
+                                </small>
+                            </div>
+                            <nav>
+                                <ul class="pagination mb-0">
+                                    <li class="page-item <?php echo $pagination['current_page'] === 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo max(1, $pagination['current_page'] - 1); ?>&status=<?php echo urlencode($_GET['status'] ?? ''); ?>&type=<?php echo urlencode($_GET['type'] ?? ''); ?>&search=<?php echo urlencode($_GET['search'] ?? ''); ?>">Previous</a>
+                                    </li>
+                                    <li class="page-item"><span class="page-link"><?php echo $pagination['current_page']; ?> of <?php echo $pagination['total_pages']; ?></span></li>
+                                    <li class="page-item <?php echo $pagination['current_page'] === $pagination['total_pages'] ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo min($pagination['total_pages'], $pagination['current_page'] + 1); ?>&status=<?php echo urlencode($_GET['status'] ?? ''); ?>&type=<?php echo urlencode($_GET['type'] ?? ''); ?>&search=<?php echo urlencode($_GET['search'] ?? ''); ?>">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                         <?php endif; ?>
 
@@ -287,102 +247,8 @@
 
         <!-- Scripts -->
         <script>
-        function updateStatus(reportId, newStatus) {
-            if (!confirm(`Are you sure you want to mark this report as "${newStatus}"?`)) {
-                return;
-            }
-            
-            const formData = new FormData();
-            formData.append('report_id', reportId);
-            formData.append('status', newStatus);
-            
-            fetch('/QTrace-Website/database/controllers/update_report_status.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Report status updated successfully!');
-                    location.reload();
-                } else {
-                    alert('Failed to update status: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating status. Please try again.');
-            });
-        }
-
-        function openChatModal(reportId) {
-            const modal = new bootstrap.Modal(document.getElementById('chatModal'));
-            modal.show();
-            
-            fetch(`/QTrace-Website/database/controllers/get_report_chat.php?report_id=${reportId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        displayChatHistory(data);
-                    } else {
-                        document.getElementById('chatModalBody').innerHTML = 
-                            '<div class="alert alert-danger">Failed to load chat history</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('chatModalBody').innerHTML = 
-                        '<div class="alert alert-danger">Error loading chat history</div>';
-                });
-        }
-
-        function displayChatHistory(data) {
-            const parent = data.parent;
-            const messages = data.messages;
-            
-            let html = `
-                <div class="alert alert-primary">
-                    <strong>Original Report</strong><br>
-                    <small class="text-muted">${parent.username} • ${new Date(parent.report_CreatedAt).toLocaleString()}</small>
-                    <p class="mt-2 mb-0">${escapeHtml(parent.report_description)}</p>
-                    ${parent.report_evidencesPhoto_URL ? 
-                        `<div class="mt-2"><img src="${parent.report_evidencesPhoto_URL}" class="img-thumbnail" style="max-width: 200px;"></div>` 
-                        : ''}
-                </div>
-            `;
-            
-            if (messages.length > 0) {
-                html += '<div class="mt-3"><strong>Chat History:</strong></div>';
-                messages.forEach(msg => {
-                    const isAdmin = msg.user_role === 'admin';
-                    const alertClass = isAdmin ? 'alert-warning' : 'alert-light';
-                    html += `
-                        <div class="alert ${alertClass} mt-2">
-                            <small class="text-muted">
-                                ${msg.username}${isAdmin ? ' <span class="badge bg-danger">Admin</span>' : ''} • 
-                                ${new Date(msg.report_CreatedAt).toLocaleString()}
-                            </small>
-                            <p class="mt-1 mb-0">${escapeHtml(msg.report_description)}</p>
-                        </div>
-                    `;
-                });
-            } else {
-                html += '<div class="alert alert-secondary mt-3">No replies yet</div>';
-            }
-            
-            document.getElementById('chatModalBody').innerHTML = html;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
         function resetFilters() {
-            const url = new URL(window.location.href);
-            url.search = '';
-            window.location.href = url.toString();
+            window.location.href = '<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>';
         }
         </script>
 

@@ -55,7 +55,7 @@
                 <i class="bi bi-chevron-down small"></i>
             </a>
             
-            <div class="collapse <?php echo in_array($page_name, ['projectList', 'projectMap', 'addProject']) ? 'show' : ''; ?>" id="submenu1">
+            <div class="collapse <?php echo in_array($page_name, ['projectList', 'projectMap', 'addProject', 'reports']) ? 'show' : ''; ?>" id="submenu1">
                 <ul class="nav nav-pills flex-column ms-3 mt-1">
                     <li class="nav-item">
                         <a class="nav-link text-black <?php echo ($page_name == 'projectList') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/project-list">
@@ -70,6 +70,11 @@
                     <li class="nav-item">
                         <a class="nav-link text-black <?php echo ($page_name == 'addProject') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/add-project">
                             Add Project
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black <?php echo ($page_name == 'reports') ? 'active' : 'text-black-50'; ?>" href="/QTrace-Website/reports">
+                            Reports
                         </a>
                     </li>
                 </ul>
@@ -124,19 +129,15 @@
             </div>
         </li>
 
-        <li class="nav-item">
-            <a href="/QTrace-Website/audit-list" class="nav-link text-black <?php echo ($page_name == 'audit') ? 'active' : ''; ?>">
-                <i class="bi bi-archive"></i> Audit Logs
-            </a>
-        </li>
+        
         <li class="nav-item">
             <a href="/QTrace-Website/list-article" class="nav-link text-black <?php echo ($page_name == 'project_articles') ? 'active' : ''; ?>">
                 <i class="bi bi-card-text"></i> Articles
             </a>
         </li>
         <li class="nav-item">
-            <a href="/QTrace-Website/reports" class="nav-link text-black <?php echo ($page_name == 'reports') ? 'active' : ''; ?>">
-                <i class="bi bi-file-text"></i> Reports
+            <a href="/QTrace-Website/audit-list" class="nav-link text-black <?php echo ($page_name == 'audit') ? 'active' : ''; ?>">
+                <i class="bi bi-archive"></i> Audit Logs
             </a>
         </li>
     </ul>

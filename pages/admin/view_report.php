@@ -1,59 +1,9 @@
 <?php
-$page_name = 'reports';
-require_once(__DIR__ . '/../../database/connection/connection.php');
-
-$reportId = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($reportId <= 0) {
-    header('Location: /QTrace-Website/pages/admin/reports.php');
-    exit();
-}
-
-$sql = "SELECT 
-            r.report_ID,
-            r.Project_ID,
-            r.user_ID,
-            r.report_type,
-            r.report_description,
-            r.report_evidencesPhoto_URL,
-            r.report_status,
-            r.report_CreatedAt,
-            pd.ProjectDetails_Title,
-            p.Project_Status,
-            u.user_firstName AS FirstName,
-            u.user_lastName AS LastName,
-            u.user_Email,
-            u.user_Role
-        FROM report_table r
-        LEFT JOIN projects_table p ON r.Project_ID = p.Project_ID
-        LEFT JOIN projectdetails_table pd ON p.Project_ID = pd.Project_ID
-        LEFT JOIN user_table u ON r.user_ID = u.user_ID
-        WHERE r.report_ID = ? AND r.reportParent_ID IS NULL
-        LIMIT 1";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $reportId);
-$stmt->execute();
-$result = $stmt->get_result();
-$report = $result->fetch_assoc();
-$stmt->close();
-
-if (!$report) {
-    header('Location: /QTrace-Website/pages/admin/reports.php');
-    exit();
-}
-
-include(__DIR__ . '/../../database/connection/security.php');
-
-function formatStatusBadge(string $status): array {
-    $key = strtolower($status);
-    if ($key === 'resolved') return ['status-pill bg-success-subtle text-success', 'Resolved'];
-    if ($key === 'in progress') return ['status-pill bg-warning-subtle text-warning', 'In Review'];
-    return ['status-pill bg-primary-subtle text-primary', 'Pending'];
-}
-
-[$statusClass, $statusLabel] = formatStatusBadge($report['report_status'] ?? 'open');
+    $page_name = 'reports';
+    require('../../database/controllers/get_admin_view_report_details.php');
+    include('../../database/connection/security.php');
 ?>
+
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
@@ -68,15 +18,13 @@ function formatStatusBadge(string $status): array {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="/QTrace-Website/assets/css/styles.css" />
     <style>
-        body { background: #f7f9fb; }
-        .card-soft { background: #fff; border: 1px solid #e6ebf1; border-radius: 12px; box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08); }
-        .section-heading { font-weight: 700; color: #111827; font-size: 1.05rem; }
-        .label-muted { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
-        .value-text { font-weight: 600; color: #111827; }
-        .status-pill { border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; }
-        .description-box { background: #f3f6fb; border: 1px solid #e6ebf1; border-radius: 10px; padding: 12px 14px; min-height: 100px; color: #0f172a; }
-        .evidence-thumb { max-width: 500px; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
-        .timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: #16a34a; display: inline-block; }
+        .main-card { border-radius: 12px; border: none; }
+        .status-pill { border-radius: 50px; padding: 4px 12px; font-size: 0.85rem; font-weight: 500; }
+        .icon-box { width: 40px; height: 40px; background: #eef2ff; color: #4f46e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .evidence-thumb { max-width: 100%; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08); }
+        .comment-item { background: #f8f9fa; border-left: 4px solid #dee2e6; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .comment-item.admin-comment { border-left-color: #ffc107; background: #fff9e6; }
+        .comment-item.user-comment { border-left-color: #0d6efd; background: #e7f1ff; }
     </style>
 </head>
 <body>
@@ -88,255 +36,157 @@ function formatStatusBadge(string $status): array {
 
             <main class="main-view">
                 <div class="container-fluid">
-                    <nav aria-label="breadcrumb" class="mb-3">
-                        <ol class="breadcrumb mb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/QTrace-Website/dashboard">Home</a></li>
                             <li class="breadcrumb-item"><a href="/QTrace-Website/pages/admin/reports.php">Report List</a></li>
-                            <li class="breadcrumb-item active">RPT-<?php echo str_pad($report['report_ID'], 3, '0', STR_PAD_LEFT); ?></li>
+                            <li class="breadcrumb-item active">Report Details</li>
                         </ol>
                     </nav>
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <h3 class="fw-bold mb-0">Report Details</h3>
-                            <small class="text-muted">View and manage report information</small>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a class="btn btn-outline-secondary" href="/QTrace-Website/pages/admin/reports.php">Back to List</a>
-                            <button class="btn btn-primary" onclick="openChatModal(<?php echo $reportId; ?>)"><i class="bi bi-reply-fill me-1"></i>Reply</button>
-                            <button class="btn btn-light border" onclick="updateStatus('in progress')">Update Status</button>
+                    <div class="row mb-2 p-2 align-items-center">
+                        <div class="col">
+                            <h2 class="fw-bold">Report Details</h2>
+                            <p>View and manage report information</p>
                         </div>
                     </div>
 
-                    <div class="row g-4">
-                        <div class="col-lg-8">
-                            <div class="card card-soft p-4 mb-4">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <div class="label-muted">Report ID</div>
-                                        <div class="d-flex align-items-center gap-2 value-text">RPT-<?php echo str_pad($report['report_ID'], 3, '0', STR_PAD_LEFT); ?></div>
+                    <div class="row g-3">
+                        <!-- Top Card - Basic Information -->
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width: 60px; height: 60px; font-size: 24px;">
+                                            <i class="bi bi-flag-fill"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="fw-bold mb-1">RPT-<?php echo str_pad($report['report_ID'], 3, '0', STR_PAD_LEFT); ?></h3>
+                                            <p class="text-muted mb-0"><i class="bi bi-tag me-2"></i><?php echo htmlspecialchars($report['report_type'] ?? 'N/A'); ?></p>
+                                        </div>
                                     </div>
-                                    <span class="<?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
-                                </div>
 
-                                <div class="mb-3">
-                                    <div class="label-muted">Report Type</div>
-                                    <div class="value-text"><?php echo htmlspecialchars($report['report_type'] ?? 'N/A'); ?></div>
-                                </div>
+                                    <div class="row g-4">
 
-                                <div class="mb-3">
-                                    <div class="label-muted">Description</div>
-                                    <div class="description-box"><?php echo nl2br(htmlspecialchars($report['report_description'] ?? '')); ?></div>
-                                </div>
+                                        <div class="col-md-3">
+                                            <label class="text-muted d-block small mb-1">Reporter Name</label>
+                                            <span class="fw-semibold"><?php echo htmlspecialchars(trim(($report['FirstName'] ?? '') . ' ' . ($report['LastName'] ?? ''))); ?></span>
+                                        </div>
 
-                                <?php if (!empty($report['report_evidencesPhoto_URL'])): ?>
-                                <div class="mb-3">
-                                    <div class="label-muted mb-2">Evidence Photos (1)</div>
-                                    <img src="<?php echo htmlspecialchars($report['report_evidencesPhoto_URL']); ?>" alt="Evidence" class="evidence-thumb">
-                                </div>
-                                <?php endif; ?>
-                            </div>
+                                        <div class="col-md-3">
+                                            <label class="text-muted d-block small mb-1">Email</label>
+                                            <span class="fw-semibold"><?php echo htmlspecialchars($report['user_Email'] ?? 'N/A'); ?></span>
+                                        </div>
 
-                            <div class="card card-soft p-4">
-                                <div class="section-heading mb-3">Activity Timeline</div>
-                                <div class="d-flex align-items-start gap-3">
-                                    <span class="timeline-dot"></span>
-                                    <div>
-                                        <div class="value-text">Report Created</div>
-                                        <small class="text-muted"><?php echo date('F d, Y \a\t h:i A', strtotime($report['report_CreatedAt'])); ?></small>
+                                        <div class="col-md-3">
+                                            <label class="text-muted d-block small mb-1">Project Name</label>
+                                            <span class="fw-semibold"><?php echo htmlspecialchars($report['ProjectDetails_Title'] ?? 'N/A'); ?></span>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="text-muted d-block small mb-1">Created Date</label>
+                                            <span class="fw-semibold"><?php echo date('M d, Y h:i A', strtotime($report['report_CreatedAt'])); ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-4">
-                            <div class="card card-soft p-4 mb-4">
-                                <div class="section-heading mb-3">Project Information</div>
-                                <div class="mb-3">
-                                    <div class="label-muted">Project ID</div>
-                                    <div class="value-text">PRJ-<?php echo date('Y', strtotime($report['report_CreatedAt'])); ?>-<?php echo str_pad($report['Project_ID'], 3, '0', STR_PAD_LEFT); ?></div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="label-muted">Project Name</div>
-                                    <div class="value-text"><?php echo htmlspecialchars($report['ProjectDetails_Title'] ?? ''); ?></div>
-                                </div>
-                                <div>
-                                    <div class="label-muted">Project Status</div>
-                                    <span class="badge bg-success-subtle text-success rounded-pill px-3"><?php echo htmlspecialchars($report['Project_Status'] ?? ''); ?></span>
-                                </div>
-                            </div>
+                        <!-- Bottom Card - Report Details & Comments -->
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <!-- Evidence Image -->
+                                    <?php if (!empty($report['report_evidencesPhoto_URL'])): ?>
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold mb-3">Evidence Photo</h6>
+                                        <a href="<?php echo htmlspecialchars($report['report_evidencesPhoto_URL']); ?>" target="_blank">
+                                            <img src="<?php echo htmlspecialchars($report['report_evidencesPhoto_URL']); ?>" alt="Evidence" class="evidence-thumb img-fluid">
+                                        </a>
+                                    </div>
+                                    <?php endif; ?>
 
-                            <div class="card card-soft p-4 mb-4">
-                                <div class="section-heading mb-3">Reporter Information</div>
-                                <div class="mb-3">
-                                    <div class="label-muted">User ID</div>
-                                    <div class="value-text">USR-<?php echo $report['user_ID']; ?></div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="label-muted">Name</div>
-                                    <div class="value-text"><?php echo htmlspecialchars(trim(($report['FirstName'] ?? '') . ' ' . ($report['LastName'] ?? ''))); ?></div>
-                                </div>
-                                <div>
-                                    <div class="label-muted">Email</div>
-                                    <div class="value-text"><?php echo htmlspecialchars($report['user_Email'] ?? ''); ?></div>
-                                </div>
-                            </div>
+                                    <!-- Report Description -->
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold mb-3">Report Description</h6>
+                                        <div class="p-3 border rounded bg-light">
+                                            <?php echo nl2br(htmlspecialchars($report['report_description'] ?? '')); ?>
+                                        </div>
+                                    </div>
 
-                            <div class="card card-soft p-4">
-                                <div class="section-heading mb-3">Additional Details</div>
-                                <div class="mb-3">
-                                    <div class="label-muted">Created Date</div>
-                                    <div class="value-text"><?php echo date('F d, Y \a\t h:i A', strtotime($report['report_CreatedAt'])); ?></div>
-                                </div>
-                                <div>
-                                    <div class="label-muted">Priority</div>
-                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3">Not set</span>
+                                    <!-- Admin Comments -->
+                                    <?php if (count($messages) > 0): ?>
+                                    <div class="mb-4">
+                                        <h6 class="fw-bold mb-3">Admin Comments (<?php echo count($messages); ?>)</h6>
+                                        <?php foreach ($messages as $msg): 
+                                            $isAdmin = strtolower($msg['user_Role']) === 'admin';
+                                            $commentClass = $isAdmin ? 'admin-comment' : 'user-comment';
+                                        ?>
+                                        <div class="comment-item <?= $commentClass ?>">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <strong><?php echo htmlspecialchars(trim(($msg['FirstName'] ?? '') . ' ' . ($msg['LastName'] ?? ''))); ?></strong>
+                                                    <?php if ($isAdmin): ?>
+                                                        <span class="badge bg-danger ms-2">Admin</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary ms-2">Citizen</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <small class="text-muted"><?php echo date('M d, Y h:i A', strtotime($msg['report_CreatedAt'])); ?></small>
+                                            </div>
+                                            <p class="mb-0"><?php echo nl2br(htmlspecialchars($msg['report_description'])); ?></p>
+                                            <?php if (!empty($msg['report_evidencesPhoto_URL'])): ?>
+                                                <div class="mt-2">
+                                                    <img src="<?php echo htmlspecialchars($msg['report_evidencesPhoto_URL']); ?>" class="img-thumbnail" style="max-width: 200px;">
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>
+
+                                    <!-- Add Comment & Status Update Form -->
+                                    <div class="border-top pt-4">
+                                        <form id="commentForm" method="POST" action="/QTrace-Website/database/controllers/report_response.php">
+                                            <input type="hidden" name="report_id" value="<?= intval($report['report_ID']); ?>">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" id="commentText" name="message" placeholder="Type your response to the reporter..." />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <select class="form-select" id="reportStatus" name="status">
+                                                        <option value="Sent" <?= $report['report_status'] == 'Sent' ? 'selected' : '' ?>>Sent</option>
+                                                        <option value="Seen" <?= $report['report_status'] == 'Seen' ? 'selected' : '' ?>>Seen</option>
+                                                        <option value="In Progress" <?= $report['report_status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
+                                                        <option value="Resolved" <?= $report['report_status'] == 'Resolved' ? 'selected' : '' ?>>Resolved</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="submit" class="btn bg-color-primary text-white w-100">
+                                                        Submit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- Chat Modal -->
-    <div class="modal fade" id="chatModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Conversation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="chatHistory">
-                        <div class="text-center py-5">
-                            <div class="spinner-border" style="color: var(--primary);" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <label class="form-label">Your reply</label>
-                        <textarea class="form-control" id="replyInput" rows="3" placeholder="Type your message..."></textarea>
-                        <div class="d-flex justify-content-end mt-2">
-                            <button class="btn bg-color-primary text-white" id="sendReplyBtn" onclick="sendReply(<?php echo $reportId; ?>)"><i class="bi bi-send me-1"></i>Send</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+    <?php include('../../components/toast.php'); ?>
 
     <script>
-    function updateStatus(newStatus) {
-        if (!confirm(`Mark this report as "${newStatus}"?`)) return;
-
-        const reportId = <?php echo $reportId; ?>;
-        const formData = new FormData();
-        formData.append('report_id', reportId);
-        formData.append('status', newStatus);
-
-        fetch('/QTrace-Website/database/controllers/update_report_status.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'Failed to update status');
-            }
-        })
-        .catch(() => alert('Error updating status'));
-    }
-
-    function openChatModal(reportId) {
-        const modal = new bootstrap.Modal(document.getElementById('chatModal'));
-        modal.show();
-        fetch(`/QTrace-Website/database/controllers/get_report_chat.php?report_id=${reportId}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    renderChat(data.parent, data.messages);
-                } else {
-                    document.getElementById('chatHistory').innerHTML = '<div class="alert alert-danger">Failed to load conversation.</div>';
-                }
-            })
-            .catch(() => {
-                document.getElementById('chatHistory').innerHTML = '<div class="alert alert-danger">Error loading conversation.</div>';
-            });
-    }
-
-    function renderChat(parent, messages) {
-        const isParentAdmin = parent.user_role && parent.user_role.toLowerCase() === 'admin';
-        let html = `
-            <div class="alert alert-primary">
-                <small class="text-muted">${parent.username}${isParentAdmin ? ' <span class="badge bg-danger">Admin</span>' : ' <span class="badge bg-secondary">Citizen</span>'} <span class="badge bg-primary-subtle text-primary ms-1">Original Report</span> • ${new Date(parent.report_CreatedAt).toLocaleString()}</small>
-                <p class="mt-2 mb-0">${escapeHtml(parent.report_description)}</p>
-                ${parent.report_evidencesPhoto_URL ? `<div class="mt-2"><img src="${parent.report_evidencesPhoto_URL}" class="img-thumbnail" style="max-width: 240px;"></div>` : ''}
-            </div>
-        `;
-        if (messages.length > 0) {
-            messages.forEach(msg => {
-                const isAdmin = msg.user_role && msg.user_role.toLowerCase() === 'admin';
-                console.log('Message from:', msg.username, 'Role:', msg.user_role, 'Is Admin:', isAdmin);
-                const alertClass = isAdmin ? 'alert-warning' : 'alert-light';
-                html += `
-                    <div class="alert ${alertClass} mt-2">
-                        <small class="text-muted">${msg.username}${isAdmin ? ' <span class="badge bg-danger">Admin</span>' : ' <span class="badge bg-secondary">Citizen</span>'} • ${new Date(msg.report_CreatedAt).toLocaleString()}</small>
-                        <p class="mt-1 mb-0">${escapeHtml(msg.report_description)}</p>
-                    </div>
-                `;
-            });
-        } else {
-            html += '<div class="alert alert-secondary">No replies yet</div>';
-        }
-        document.getElementById('chatHistory').innerHTML = html;
-    }
-
-    function sendReply(parentId) {
-        const textarea = document.getElementById('replyInput');
-        const message = textarea.value.trim();
-        if (!message) return;
-        document.getElementById('sendReplyBtn').disabled = true;
-        const formData = new FormData();
-        formData.append('parent_report_id', parentId);
-        formData.append('message', message);
-        fetch('/QTrace-Website/database/controllers/add_chat_message.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                textarea.value = '';
-                // Reload chat content without reopening modal
-                fetch(`/QTrace-Website/database/controllers/get_report_chat.php?report_id=${parentId}`)
-                    .then(res => res.json())
-                    .then(chatData => {
-                        if (chatData.success) {
-                            renderChat(chatData.parent, chatData.messages);
-                        }
-                    });
-            } else {
-                alert(data.message || 'Failed to send message');
-            }
-        })
-        .catch(() => alert('Error sending message'))
-        .finally(() => { document.getElementById('sendReplyBtn').disabled = false; });
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
     </script>
 
     <script src="/QTrace-Website/assets/js/mouseMovement.js"></script>
+    <script src="/QTrace-Website/assets/js/toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>

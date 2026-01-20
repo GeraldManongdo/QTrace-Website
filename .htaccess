@@ -31,7 +31,8 @@ RewriteRule ^edit-article$ pages/admin/edit_article.php [NC,L]
 RewriteRule ^project-reports$ pages/admin/project_reports.php [NC,L]
 RewriteRule ^add-article$ pages/admin/add_article.php [NC,L]
 
-RewriteRule ^reports$ pages/admin/reports.php [NC,L]
+RewriteRule ^reports$ pages/admin/list_reports.php [NC,L]
+RewriteRule ^view-report$ pages/admin/view_report.php [NC,L]
 
 RewriteRule ^add-account$ pages/admin/add_account.php [NC,L]
 RewriteRule ^account-list$ pages/admin/list_account.php [NC,L]
