@@ -103,7 +103,7 @@ if (!empty($_POST['expertise']) && is_array($_POST['expertise'])) {
 
         // --- LOG AUDIT ACTIVITY ---
         $auditService = new AuditService($conn);
-        $userId = $_SESSION['user_id'] ?? null;
+        $userId = $_SESSION['user_ID'] ?? null;
         
         // Prepare new values for audit log
         $newContractorVals = [

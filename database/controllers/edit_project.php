@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         // Log document upload to audit trail
                         $auditService = new AuditService($conn);
-                        $userId = $_SESSION['user_id'] ?? null;
+                        $userId = $_SESSION['user_ID'] ?? null;
                         $docData = [
                             'Document_Type' => $docName,
                             'File_Name' => $filename,
@@ -165,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         // Log milestone image upload to audit trail
                         $auditService = new AuditService($conn);
-                        $userId = $_SESSION['user_id'] ?? null;
+                        $userId = $_SESSION['user_ID'] ?? null;
                         $milestoneData = [
                             'Milestone_Phase' => $phase,
                             'Image_File_Name' => $filename,
@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // --- LOG AUDIT ACTIVITY ---
         $auditService = new AuditService($conn);
-        $userId = $_SESSION['user_id'] ?? null;
+        $userId = $_SESSION['user_ID'] ?? null;
         
         // Prepare new values for audit log
         $newProjectVals = [

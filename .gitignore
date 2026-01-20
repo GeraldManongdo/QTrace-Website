@@ -1,4 +1,2 @@
 # Ignore the uploaded files directory
-assets/uploads/documents/
-assets/uploads/logos/
-assets/uploads/images/
+uploads/
