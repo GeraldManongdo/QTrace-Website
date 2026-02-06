@@ -211,9 +211,6 @@
                             <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;" onclick="window.location.href='/QTrace-Website/map'">
                                 Explore Project Map
                             </button>
-                            <button class="btn btn-light border px-5 py-2 fw-bold" onclick="window.location.href='/QTrace-Website/login'">
-                                Sign In with QC ID
-                            </button>
                         </div>
                     </div>
                     </div>

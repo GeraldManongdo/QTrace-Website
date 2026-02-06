@@ -360,9 +360,6 @@
                             <p class="fs-6">Be part of building a more transparent and accountable Quezon City. Register today and start monitoring projects in your community.</p>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center gap-3 gap-md-5">
-                            <button class="btn px-5 py-2 fw-bold text-white" style="background-color: var(--accent) !important;" onclick="window.location.href='/QTrace-Website/login'">
-                                Register As Citizen
-                            </button>
                             <button class="btn btn-light border px-5 py-2 fw-bold" onclick="window.location.href='/QTrace-Website/projects'">
                                 Explore Projects
                             </button>

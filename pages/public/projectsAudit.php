@@ -236,8 +236,8 @@
         <main>
             <section class="container py-5">
                 <div class="title-section">
-                    <h2 class="fw-bold">Contractor List </h2>
-                    <p class="text-muted">Official details of contractors involved in Quezon City government projects.</p>
+                    <h2 class="fw-bold">Project Logs</h2>
+                    <p class="text-muted">Official records of all project-related actions in the QTrace system.</p>
                 </div>
 
         <!-- Main Content -->

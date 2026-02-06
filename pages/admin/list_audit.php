@@ -141,7 +141,8 @@
                                                 <td class="text-center">
                                                     <div class="btn-group">
                                                         <button class="btn btn-sm btn-outline-primary" 
-                                                                onclick='viewDiff(<?php echo json_encode($log['old_values']); ?>, <?php echo json_encode($log['new_values']); ?>)'>
+                                                                onclick="showComparison(<?php echo htmlspecialchars(json_encode($log)); ?>)" 
+                                                                data-bs-toggle="modal" data-bs-target="#comparisonModal">
                                                             <i class="bi bi-eye"></i>
                                                         </button>
                                                     </div>
@@ -182,46 +183,28 @@
                             </div>
                         <?php endif; ?>
 
-                    <div class="modal fade" id="detailModal" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header"><h5>Change Details</h5></div>
-                                <div class="modal-body">
-                                    <h6>Before:</h6>
-                                    <pre id="oldVal" class="bg-light p-2 border"></pre>
-                                    <h6>After:</h6>
-                                    <pre id="newVal" class="bg-light p-2 border text-success"></pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </main>
         </div>
     </div>
-    <div class="modal fade" id="diffModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Data Change Comparison</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6 border-end">
-                        <p class="fw-bold text-danger">OLD VALUES (Before)</p>
-                        <pre id="oldJson" class="p-2 bg-light border small" style="max-height: 400px; overflow: auto;"></pre>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="fw-bold text-success">NEW VALUES (After)</p>
-                        <pre id="newJson" class="p-2 bg-light border small" style="max-height: 400px; overflow: auto;"></pre>
+    <!-- Comparison Modal -->
+    <div class="modal fade" id="comparisonModal" tabindex="-1" aria-labelledby="comparisonModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-color-primary text-white">
+                    <h5 class="modal-title" id="comparisonModalLabel">
+                        <i class="bi bi-arrow-left-right me-2"></i>Audit Change Details
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background-color: #f9fafb;">
+                    <div id="comparisonContent">
+                        <!-- Content will be inserted here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>  
 
     <?php include('../../components/toast.php'); ?>
 
@@ -229,23 +212,88 @@
 
     <!-- Custome Script For This Page Only  --> 
     <script>
-function viewDiff(oldVal, newVal) {
-    const modal = new bootstrap.Modal(document.getElementById('diffModal'));
+function showComparison(auditData) {
+    const oldValues = auditData.old_values ? JSON.parse(auditData.old_values) : null;
+    const newValues = auditData.new_values ? JSON.parse(auditData.new_values) : null;
+    const action = auditData.action;
     
-    // Parse and beautify the JSON
-    const formatJSON = (val) => {
-        if (!val) return "No data available";
-        try {
-            // Check if it's already an object or needs parsing
-            const obj = typeof val === 'string' ? JSON.parse(val) : val;
-            return JSON.stringify(obj, null, 4);
-        } catch (e) { return val; }
-    };
+    let comparisonHTML = '';
+    
+    const allFields = new Set();
+    if (oldValues) Object.keys(oldValues).forEach(key => allFields.add(key));
+    if (newValues) Object.keys(newValues).forEach(key => allFields.add(key));
+    
+    allFields.forEach(field => {
+        const oldValue = oldValues ? oldValues[field] : null;
+        const newValue = newValues ? newValues[field] : null;
+        
+        let displayOldValue = formatValue(oldValue);
+        let displayNewValue = formatValue(newValue);
+        
+        if (action === 'CREATE') {
+            comparisonHTML += `
+                <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid #388e3c;">
+                    <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.9rem;">${field}</div>
+                    <div style="background-color: #e8f5e9; padding: 0.75rem; border-radius: 6px;">
+                        <div style="font-weight: 600; color: #388e3c; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                            <i class="bi bi-plus-circle me-1"></i>Created
+                        </div>
+                        <div>${displayNewValue || '<em>Not specified</em>'}</div>
+                    </div>
+                </div>
+            `;
+        } else if (action === 'DELETE' || action === 'DEACTIVATE') {
+            comparisonHTML += `
+                <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid #d32f2f;">
+                    <div style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.9rem;">${field}</div>
+                    <div style="background-color: #ffebee; padding: 0.75rem; border-radius: 6px;">
+                        <div style="font-weight: 600; color: #d32f2f; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                            <i class="bi bi-trash me-1"></i>Deleted
+                        </div>
+                        <div>${displayOldValue || '<em>Not specified</em>'}</div>
+                    </div>
+                </div>
+            `;
+        } else if (action === 'UPDATE' || action === 'EDIT') {
+            if (oldValue !== newValue) {
+                comparisonHTML += `
+                    <div style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="font-weight: 600; color: var(--primary); margin-bottom: 1rem; text-transform: uppercase; font-size: 0.9rem;">${field}</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div style="background-color: #ffebee; padding: 0.75rem; border-radius: 6px; border-left: 4px solid #d32f2f;">
+                                <div style="font-weight: 600; color: #d32f2f; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                                    <i class="bi bi-x-circle me-1"></i>Before
+                                </div>
+                                <div>${displayOldValue || '<em>Not specified</em>'}</div>
+                            </div>
+                            <div style="background-color: #e8f5e9; padding: 0.75rem; border-radius: 6px; border-left: 4px solid #388e3c;">
+                                <div style="font-weight: 600; color: #388e3c; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                                    <i class="bi bi-check-circle me-1"></i>After
+                                </div>
+                                <div>${displayNewValue || '<em>Not specified</em>'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    });
+    
+    document.getElementById('comparisonContent').innerHTML = comparisonHTML || '<p class="text-muted">No changes to display.</p>';
+}
 
-    document.getElementById('oldJson').textContent = formatJSON(oldVal);
-    document.getElementById('newJson').textContent = formatJSON(newVal);
-    
-    modal.show();
+function formatValue(value) {
+    if (value === null || value === undefined) return '';
+    if (typeof value === 'object') {
+        return JSON.stringify(value, null, 2);
+    }
+    if (typeof value === 'number') {
+        if (value > 1000000) {
+            return '₱' + value.toLocaleString('en-US', {maximumFractionDigits: 2});
+        }
+        return value.toLocaleString('en-US');
+    }
+    return String(value);
 }
 
 function confirmUndo(auditId, resourceType, action) {

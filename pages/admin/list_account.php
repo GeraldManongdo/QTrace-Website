@@ -78,6 +78,7 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
+                                        <th>User ID</th>
                                         <th>QC ID</th>
                                         <th>Full Name</th>
                                         <th>Role</th>
@@ -91,6 +92,7 @@
                                     <?php if (isset($result) && $result->num_rows > 0): ?>
                                         <?php while($row = $result->fetch_assoc()): ?>
                                         <tr>
+                                            <td class="fw-bold">User-<?= str_pad($row['user_ID'], 5, '0', STR_PAD_LEFT) ?></td>
                                             <td class="fw-bold">QC-<?= str_pad($row['QC_ID_Number'], 5, '0', STR_PAD_LEFT) ?></td>
                                             <td>
                                                 <?= htmlspecialchars($row['user_firstName'] . ' ' .  $row['user_middleName'].' ' . $row['user_lastName']) ?>

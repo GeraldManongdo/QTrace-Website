@@ -106,10 +106,26 @@
                                         <div class="preview-zone mb-3" id="drop-zone" style="cursor: pointer;" onclick="document.getElementById('imageInput').click();">
                                             <?php 
                                                 $logoPath = !empty($contractor['Contractor_Logo_Path']) ? $contractor['Contractor_Logo_Path'] : '';
-                                                $hasLogo = !empty($logoPath) && file_exists($logoPath);
+                                                $logoUrl = '';
+                                                $hasLogo = false;
+
+                                                if (!empty($logoPath)) {
+                                                    if (preg_match('/^https?:\/\//i', $logoPath)) {
+                                                        $logoUrl = $logoPath;
+                                                        $hasLogo = true;
+                                                    } else {
+                                                        $logoUrl = $logoPath;
+                                                        if (strpos($logoPath, '/') === 0) {
+                                                            $logoFilePath = $_SERVER['DOCUMENT_ROOT'] . $logoPath;
+                                                        } else {
+                                                            $logoFilePath = $_SERVER['DOCUMENT_ROOT'] . '/QTrace-Website/' . ltrim($logoPath, '/');
+                                                        }
+                                                        $hasLogo = file_exists($logoFilePath);
+                                                    }
+                                                }
                                             ?>
                                             
-                                            <img src="<?= $hasLogo ? $logoPath : 'https://via.placeholder.com/150' ?>" 
+                                            <img src="<?= $hasLogo && !empty($logoUrl) ? $logoUrl : 'https://via.placeholder.com/150' ?>" 
                                                 id="preview-img" 
                                                 style="display: block; width: 100%; height: 100%; object-fit: cover;" />
                                             
