@@ -274,7 +274,7 @@
 										</div>
 										<div class="d-flex justify-content-between">
 												<button type="button" class="btn btn-light prev-btn">Back</button>
-												<button type="button" class="btn btn-warning fw-medium  bg-color-primary px-4 next-btn">Next Step</button>
+												<button type="button" class="btn bg-color-primary text-light px-4 next-btn">Next Step</button>
 										</div>
 									</div>
 
